@@ -14,15 +14,9 @@ CREATE OR REPLACE TYPE CurrentStudiesList AS VARRAY(10) OF VARCHAR(30);
 
 /
 
-CREATE OR REPLACE TYPE University_ob AS OBJECT(
-	name VARCHAR(100)
-);
-
-/
-
 CREATE OR REPLACE TYPE Company_ob AS OBJECT(
 	CIF VARCHAR(9),
-	bussinessName VARCHAR(100),
+	businessName VARCHAR(100),
 	postalCode INT,
 	sector VARCHAR(100)
 );
@@ -32,10 +26,11 @@ CREATE OR REPLACE TYPE Company_ob AS OBJECT(
 CREATE OR REPLACE TYPE Agreement_ob AS OBJECT(
 	startDate date,
 	endDate date
-)NOT FINAL;
+)NOT FINAL; --AFEGIR NOT INSTANTIABLE
 
 /
 
+/*startDate, endDate i goalsDescription han de ser PK (TO-DO)*/
 CREATE OR REPLACE TYPE AgreementCol_ob UNDER Agreement_ob(
 	goalsDescription VARCHAR(1000),
 	extendPeriod VARCHAR(1) 

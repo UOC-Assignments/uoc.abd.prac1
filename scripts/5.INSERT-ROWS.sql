@@ -92,40 +92,62 @@ VALUES ('22222222B',
         (select ref(r) from lResearches r where name='RADIOACTIVITY') 
 );
 
-INSERT INTO universities (name) -- THIS WAY THE hasAgreement_tab table constructor is automatically called (p.32 M2)
-VALUES ('Universitat Oberta de Catalunya'
-);
-
-INSERT INTO companies (CIF,bussinessName,postalCode,sector)
+INSERT INTO companies (CIF,businessName,postalCode,sector) -- THIS WAY THE hasAgreement_tab table constructor is automatically called (p.32 M2)
 VALUES ('Z12345678',
         'IBM',
         08080,
         'COMPUTING'
 );
 
-INSERT INTO AgreementCols
-VALUES ('1-January-2020', 
-        '1-January-2021', 
-        (select ref(u) from universities u where u.name='Universitat Oberta de Catalunya'), 
-        (select ref(c) from companies c where c.bussinessName='IBM'),
+/* INSERIR A LA NESTED TABLE hasAgreements_nt FILES NOVES D'UN SUBTIPUS D'AQUESTA: 
+INSERIM FILES DE TIPUS AGREEMENTCOL (SUBCLASSE) EN UNA TAULA DE TIPUS AGREEMENT (SUPERCLASSE)*/
+
+INSERT INTO TABLE (SELECT c.hasAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementCol_ob (
+        '1-January-2020', 
+        '1-January-2045',
         'QUANTUM COMPUTING RESEARCH COLABORATION', 
-		'Y',
+		'N',
 		(select ref(s) from PDIS s where s.NIF='22222222B'),
-        refLResearch_va((select ref(r1) from LResearches r1 where r1.name='COMPUTER ARCHITECTURES'),
-		             (select ref(r2) from LResearches r2 where r2.name='QUANTUM PHYSICS'),
-		             (select ref(r3) from LResearches r3 where r3.name='ENGINEERING'))
+        refLResearch_va((select ref(r1) from LResearches r1 where r1.name='QUANTUM PHYSICS'),
+		             (select ref(r2) from LResearches r2 where r2.name='ENGINEERING'),
+					 (select ref(r2) from LResearches r2 where r2.name='COMPUTER ARCHITECTURES')
+        ))
 );
 
-INSERT INTO universities
-
-UPDATE universities SET hasAgreements = AgreementCol_tab ( AgreementCol_ob (
+INSERT INTO TABLE (SELECT c.hasAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementCol_ob (
         '1-January-2020', 
-        '1-January-2021', 
-        (select ref(u) from universities u where u.name='Universitat Oberta de Catalunya'), 
-        (select ref(c) from companies c where c.bussinessName='IBM'),
+        '1-January-2025', 
         'BLACK HOLE SIMULATOR PROJECT', 
 		'Y',
 		(select ref(s) from PDIS s where s.NIF='11111111B'),
         refLResearch_va((select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
-		             (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))))
+		             (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')
+        ))
 );
+
+/* SI VOLEM ACTUALITZAR UNA FILERA D'UN NESTED TABLE PROCEDIM COM SEGUEIX */
+
+/*UPDATE companies 
+SET hasAgreements = Agreement_tab ( AgreementCol_ob (
+        '1-January-2020', 
+        '1-January-2025', 
+        'BLACK HOLE SIMULATOR PROJECT', 
+		'Y',
+		(select ref(s) from PDIS s where s.NIF='11111111B'),
+        refLResearch_va((select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
+		             (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')))                     
+        )
+WHERE businessname like 'IBM';*/
+
+INSERT INTO TABLE (SELECT c.hasAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementInt_ob (
+        '1-January-2020', 
+        '1-January-2025', 
+        fullname((select ref(r1) from PDIS r1 where r1.NIF='11111111B')
+        ))
+);
+
+
+COMMIT;
