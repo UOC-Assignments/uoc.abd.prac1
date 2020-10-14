@@ -26,6 +26,6 @@ CREATE OR REPLACE TYPE Staff_va AS VARRAY (100) OF Staff_ob NOT NULL;
 
 /
 
-CREATE or REPLACE TYPE LResearch_va AS VARRAY(3) OF LResearch_ob NOT NULL;
+CREATE or REPLACE TYPE refLResearch_va AS VARRAY(3) OF REF LResearch_ob NOT NULL;
 
 /

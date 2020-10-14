@@ -1,5 +1,5 @@
 CREATE TABLE universities OF University_ob 
-NESTED TABLE hasAgreements STORE AS hasAgreements_t;
+NESTED TABLE hasAgreements STORE AS hasAgreements_nt;
 
 /
 
@@ -17,7 +17,7 @@ CREATE TABLE agreementCols OF AgreementCol_ob (
 /
 
 CREATE TABLE agreementInts OF AgreementInt_ob
-NESTED TABLE hasAddendums STORE AS hasAddendums_t; 
+NESTED TABLE hasAddendums STORE AS hasAddendums_nt; 
 
 /
 
