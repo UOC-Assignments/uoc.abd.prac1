@@ -36,9 +36,8 @@ CREATE OR REPLACE TYPE AgreementInt_ob UNDER Agreement_ob(
 /
 
 CREATE OR REPLACE TYPE AgreementCol_ob UNDER Agreement_ob(
-  test VARCHAR(1)
-  --goalsDescription VARCHAR(1000),
-  --extendPeriod VARCHAR(1)
+  goalsDescription VARCHAR(1000),
+  extendPeriod VARCHAR(1)
 )FINAL;
 /
 

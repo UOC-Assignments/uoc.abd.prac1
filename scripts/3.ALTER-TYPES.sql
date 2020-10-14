@@ -1,8 +1,8 @@
-/*ALTER TYPE AgreementCol_ob ADD ATTRIBUTE(
-	hasStakeholder REF PDI_ob,
-	hasLinesOfResearch refLResearch_va
+ALTER TYPE AgreementCol_ob ADD ATTRIBUTE(
+	hasStakeholder REF PDI_ob
+	--hasLinesOfResearch refLResearch_va
 )CASCADE;
-/*/
+/
 
 ALTER TYPE Company_ob ADD ATTRIBUTE(
 	--hasColAgreements ColAgreements_tab
