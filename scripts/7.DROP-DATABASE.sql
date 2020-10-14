@@ -5,6 +5,9 @@ DROP TABLE universities;
 DROP TABLE staff;
 DROP TABLE lresearch;
 DROP TABLE pdis;
+DROP TABLE agreementInts;
+DROP TABLE agreementCols;
+DROP TABLE addendums;
 
 DROP TYPE PDI_tab;
 DROP TYPE Company_tab;

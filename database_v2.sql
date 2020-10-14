@@ -291,11 +291,12 @@
 
             CREATE or REPLACE TYPE PDI_tab AS TABLE OF PDI_ob;
 
--- ######## 3.7 - Tipus TABLE "Staff_tab"
+-- ######## 3.7 - Tipus TABLE "Staff_va"  *EXPLICAR CANVI DE NT A VA
 -- ########
 -- ######## SQL:
 
-            CREATE or REPLACE TYPE Staff_tab AS TABLE OF Staff_ob;
+            --CREATE or REPLACE TYPE Staff_tab AS TABLE OF Staff_ob;
+            CREATE OR REPLACE TYPE Staff_va AS VARRAY (100) OF Staff_ob;
 
 -- ######## 3.8 - Tipus VARRAY "LResearch_va"
 -- ########
@@ -361,7 +362,7 @@
 -- ######## SQL:
 
 			ALTER TYPE AgreementCol_ob ADD ATTRIBUTE(
-				refPDI REF PDI_ob,
+				hasStakeholder REF PDI_ob,
                 hasLinesOfResearch LResearch_va
 			)CASCADE;
 
@@ -378,17 +379,17 @@
 -- ######## SQL:
 
 			ALTER TYPE Addendum_ob ADD ATTRIBUTE(
-				hasStaffAssigned Staff_tab,
+				hasStaffAssigned Staff_va,
                 hasEnrolledStudents Student_va,
-                refPDI REF PDI_ob
+                hasPDIResponsible REF PDI_ob
 			)CASCADE;
 
 -- ######## 4.7 - CLASSE "Student"
 -- ########
--- ######## SQL: ERROR COMPILING!
+-- ######## SQL: 
 
 			ALTER TYPE Student_ob ADD ATTRIBUTE(
-				isEnrolledInAddendums Addendum_tab
+				--Nothing to add
 			)CASCADE;
 
 -- ######## 4.8 - CLASSE "PDI"
@@ -396,17 +397,15 @@
 -- ######## SQL:
 
 			ALTER TYPE PDI_ob ADD ATTRIBUTE(
- 				isEnrolledInAgreementCol AgreementCol_tab,
-                isResponsibleOfAddendums Addendum_tab,
-                refLOR REF LResearch_ob
+                hasSpecialty REF LResearch_ob
 			)CASCADE;
 
 -- ######## 4.9 - CLASSE "Staff"
 -- ########
--- ######## SQL: ERROR COMPILING
+-- ######## SQL: 
 
 			ALTER TYPE Staff_ob ADD ATTRIBUTE(
-				hasAddendumsAssigned Addendum_tab
+				--Nothing to add
 			)CASCADE;
 
 -- ######## 4.10 - CLASSE "LResearch"
@@ -414,8 +413,7 @@
 -- ######## SQL:
 
 			ALTER TYPE LResearch_ob ADD ATTRIBUTE(
-				hasSpecialists PDI_tab,
-                performedByAgreements AgreementCol_tab
+				--Nothing to add
 			)CASCADE;
 
 /*###############################################################################
@@ -428,31 +426,45 @@
 -- ########             persistent del disseny Object-Relational al ORDBMS) mitjançant 
 -- ########             sentències “CREATE TABLE table OF object_type”.
 
--- ######## 3.0 TAULA "template"
-
-			CREATE OR REPLACE TABLE template OF type(
-				foreignKey_ref REF foreignKey REFERENCES class --DEFINIM LES RELACIONS D'INTEGRITAT REFERENCIAL (REF's) 
-				OBJECT IDENTIFIER IS PRIMARY KEY;
-			);
-
--- ######## 3.1 TAULA "companies"
+-- ######## 3.1 TAULA "universities"
 -- ########
 -- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
 -- ########
 -- ######## SQL:
 
-			CREATE OR REPLACE TABLE companies of Company (
-				PRIMARY KEY (CIF),
-				OBJECT IDENTIFIER IS PRIMARY KEY;
-			);
+            CREATE TABLE universities OF University_ob 
+            NESTED TABLE hasAgreements STORE AS hasAgreements_t;
 
--- ######## 3.2 TAULA "universities"
+            CREATE TABLE companies OF Company_ob (PRIMARY KEY (CIF));
+
+			CREATE TABLE agreementCols OF AgreementCol_ob;
+
+			CREATE TABLE agreementInts OF AgreementInt_ob
+            NESTED TABLE hasAddendums STORE AS hasAddendums_t; 
+
+            -- agreementInts no compila, possiblement per culpa de les nested tables multicapa. La solució es canviar una NT per un VARRAY gran (1000 per ex.) o unscoped:
+			-- https://www.experts-exchange.com/questions/21344386/Oracle-problem-creating-multi-layer-nested-table.html
+
+            CREATE TABLE addendums OF Addendum_ob;
+
+            CREATE TABLE pdis OF PDI_ob (PRIMARY KEY (NIF));
+
+            CREATE TABLE students OF Student_ob (PRIMARY KEY (NIF));
+
+            CREATE TABLE staff OF Staff_ob (PRIMARY KEY (NIF));
+
+            CREATE TABLE lResearch OF LResearch_ob;
+
+
+-- 2nd APPROACH 
+
+-- ######## 3.3 TAULA "Agreements"
 -- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
+-- ######## DESCRIPCIÓ: Per la propietat de substitució (BIBLIO) podem definir una 
+-- ########             única taula "Agreement" que podrà contenir files de qualsevol 
+-- ########             dels seus subtipus
 -- ########
 -- ######## SQL:
 
-			CREATE OR REPLACE TABLE universities of University (
-				company_ref REF Company REFERENCES companies --DEFINIM LES RELACIONS D'INTEGRITAT REFERENCIAL (REF's) 
-			);
+            --CREATE TABLE agreements OF Agreement_ob; --(OBJECT IDENTIFIER IS PRIMARY KEY);
 

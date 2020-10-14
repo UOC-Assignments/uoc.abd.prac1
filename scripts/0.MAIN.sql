@@ -2,6 +2,6 @@
 --@'2.CREATE-AT-NT-TYPES.sql'
 --@'3.ALTER-TYPES.sql'
 --@'4.CREATE-TABLES.sql'
---@'5.INSERT-ROWS.sql'
+@'5.INSERT-ROWS.sql'
 --@'6.DELETE-ROWS.sql'
 --@'7.DROP-DATABASE.sql'
