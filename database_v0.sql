@@ -133,3 +133,5 @@ CREATE TABLE universities of University (
 	company_ref REF Company REFERENCES companies --DEFINIM LES RELACIONS D'INTEGRITAT REFERENCIAL (REF's) 
 	OBJECT IDENTIFIER IS PRIMARY KEY;
 );
+
+/*  *** */
