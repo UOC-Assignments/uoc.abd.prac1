@@ -3,5 +3,6 @@
 --@'3.ALTER-TYPES.sql'
 --@'4.CREATE-TABLES.sql'
 --@'5.INSERT-ROWS.sql'
---@'6.DELETE-ROWS.sql'
---@'7.DROP-DATABASE.sql'
+--@'6.SEECTS.sql'
+--@'7.DELETE-ROWS.sql'
+--@'8.DROP-DATABASE.sql'

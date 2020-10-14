@@ -1,20 +1,16 @@
-CREATE TABLE universities OF University_ob 
+CREATE TABLE companies OF Company_ob (PRIMARY KEY (CIF)) 
 NESTED TABLE hasAgreements STORE AS hasAgreements_nt;
 
 /
 
-CREATE TABLE companies OF Company_ob (PRIMARY KEY (CIF));
-
-/
-
-CREATE TABLE agreementCols OF AgreementCol_ob (
-		CHECK (refUniversity IS NOT NULL),
-		CHECK (refCompany IS NOT NULL),
+/* CREATE TABLE agreementCols OF AgreementCol_ob (
 		CHECK (hasLinesOfResearch IS NOT NULL),
 		CHECK (hasStakeholder IS NOT NULL)
 		);
 
-/
+-- AQUESTS CHECKS HAN D'ANAR AL NESTED TABLE hasAgreements_nt
+
+/ */
 
 CREATE TABLE agreementInts OF AgreementInt_ob
 NESTED TABLE hasAddendums STORE AS hasAddendums_nt; 

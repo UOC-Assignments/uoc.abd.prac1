@@ -1,12 +1,4 @@
-CREATE or REPLACE TYPE Company_tab AS TABLE OF Company_ob;
-
-/
-
 CREATE or REPLACE TYPE Agreement_tab AS TABLE OF Agreement_ob;
-
-/
-
-CREATE or REPLACE TYPE AgreementCol_tab AS TABLE OF AgreementCol_ob;
 
 /
 
