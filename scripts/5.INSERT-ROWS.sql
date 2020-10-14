@@ -172,4 +172,14 @@ VALUES (AgreementCol_ob (
         ))
 );
 
+/*AQUEST FUNCIONA*/
+
+UPDATE companies 
+SET hasColAgreements = AgreementsCol_tab ( AgreementCol_ob (
+        '1-January-2020', 
+        '1-January-2045',
+        'Y'
+        ))
+WHERE businessname like 'IBM';
+
 COMMIT;
