@@ -25,7 +25,7 @@ ALTER TYPE Agreement_ob ADD ATTRIBUTE(
 
 ALTER TYPE AgreementCol_ob ADD ATTRIBUTE(
 	hasStakeholder REF PDI_ob,
-	hasLinesOfResearch LResearch_va
+	hasLinesOfResearch REF LResearch_va
 )CASCADE;
 
 /
@@ -37,8 +37,8 @@ ALTER TYPE AgreementInt_ob ADD ATTRIBUTE(
 /
 
 ALTER TYPE Addendum_ob ADD ATTRIBUTE(
-	hasStaffAssigned Staff_va,
-	hasEnrolledStudents Student_va,
+	hasStaffAssigned REF Staff_va,
+	hasEnrolledStudents REF Student_va,
 	hasPDIResponsible REF PDI_ob
 )CASCADE;
 

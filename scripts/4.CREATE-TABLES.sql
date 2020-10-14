@@ -46,6 +46,6 @@ CREATE TABLE staff OF Staff_ob (PRIMARY KEY (NIF))
 
 /
 
-CREATE TABLE lResearch OF LResearch_ob (PRIMARY KEY (name));
+CREATE TABLE lResearches OF LResearch_ob (PRIMARY KEY (name));
 
 /
