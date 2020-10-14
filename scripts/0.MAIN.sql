@@ -5,4 +5,5 @@
 --@'5.INSERT-ROWS.sql'
 --@'6.SEECTS.sql'
 --@'7.DELETE-ROWS.sql'
---@'8.DROP-DATABASE.sql'
+--@'8.SELECTS.sql'
+--@'9.DROP-DATABASE.sql'

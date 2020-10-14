@@ -1,5 +1,7 @@
 CREATE TABLE companies OF Company_ob (PRIMARY KEY (CIF)) 
-NESTED TABLE hasAgreements STORE AS hasAgreements_nt;
+	NESTED TABLE hasAgreements STORE AS hasAgreements_nt(
+	(PRIMARY KEY (NESTED_TABLE_ID))
+		NESTED TABLE hasAddendums STORE AS hasAddendums_nt); 
 
 /
 
@@ -12,17 +14,8 @@ NESTED TABLE hasAgreements STORE AS hasAgreements_nt;
 
 / */
 
-CREATE TABLE agreementInts OF AgreementInt_ob
-NESTED TABLE hasAddendums STORE AS hasAddendums_nt; 
-
-/
-
 -- agreementInts no compila, possiblement per culpa de les nested tables multicapa. La solució es canviar una NT per un VARRAY gran (1000 per ex.) o unscoped:
 -- https://www.experts-exchange.com/questions/21344386/Oracle-problem-creating-multi-layer-nested-table.html
-
-CREATE TABLE addendums OF Addendum_ob;
-
-/
 
 CREATE TABLE PDIS OF PDI_ob (
         PRIMARY KEY (NIF),
