@@ -1,17 +1,11 @@
-/*CREATE OR REPLACE TYPE Boolean AS OBJECT (
-	boolvar NUMBER(1) NOT NULL 
-);*/
-
 CREATE OR REPLACE TYPE Fullname AS OBJECT (
 	name VARCHAR(30),
 	surname1 VARCHAR(50),
 	surname2 VARCHAR(50)
-);
-
+)FINAL;
 /
 
 CREATE OR REPLACE TYPE CurrentStudiesList AS VARRAY(10) OF VARCHAR(30);
-
 /
 
 CREATE OR REPLACE TYPE Company_ob AS OBJECT(
@@ -19,15 +13,13 @@ CREATE OR REPLACE TYPE Company_ob AS OBJECT(
 	businessName VARCHAR(100),
 	postalCode INT,
 	sector VARCHAR(100)
-);
-
+)FINAL;
 /
 
 CREATE OR REPLACE TYPE Agreement_ob AS OBJECT(
 	startDate date,
 	endDate date
-)NOT FINAL; --ADD NOT INSTANTIABLE
-
+)NOT FINAL NOT INSTANTIABLE;
 /
 
 /*startDate, endDate i goalsDescription han de ser PK (TO-DO)*/
@@ -35,19 +27,19 @@ CREATE OR REPLACE TYPE Agreement_ob AS OBJECT(
 CREATE OR REPLACE TYPE AgreementTest_ob UNDER Agreement_ob(
 	goalsDescription VARCHAR(1000),
 	extendPeriod VARCHAR(1) 
-);
+)FINAL;
 
 /
 
 CREATE OR REPLACE TYPE AgreementInt_ob UNDER Agreement_ob(
 	universityManager fullname
-);
+)FINAL;
 
 /
 
 CREATE OR REPLACE TYPE Addendum_ob AS OBJECT (
 	signatureDate date
-);
+)FINAL;
 
 /
 
@@ -56,7 +48,7 @@ CREATE OR REPLACE TYPE Student_ob AS OBJECT (
 	internalID VARCHAR(9),
 	completeName fullname,
 	currentStudies currentStudiesList
-);
+)FINAL;
 
 /
 
@@ -66,14 +58,14 @@ CREATE OR REPLACE TYPE PDI_ob AS OBJECT(
 	completeName fullname,
 	department VARCHAR(30),
 	incorporationDate date
-);
+)FINAL;
 
 /
 
 CREATE OR REPLACE TYPE Staff_ob AS OBJECT (
 	NIF VARCHAR(9),
 	completeName fullname
-);
+)FINAL;
 
 /
 
@@ -82,6 +74,6 @@ CREATE OR REPLACE TYPE LResearch_ob AS OBJECT (
 	goalsDescription VARCHAR (1000),
 	startDate date,
 	endDate date
-);
+)FINAL;
 
 /

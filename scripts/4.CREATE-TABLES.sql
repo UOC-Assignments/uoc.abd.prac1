@@ -3,7 +3,14 @@ CREATE TABLE companies OF Company_ob (PRIMARY KEY (CIF))
 	(PRIMARY KEY (NESTED_TABLE_ID))
 		NESTED TABLE hasAddendums STORE AS hasAddendums_nt)
 	NESTED TABLE hasTestAgreements STORE AS hasTestAgreements_nt; 
+/
 
+CREATE TABLE companies_new OF Company_ob (CIF PRIMARY KEY) 
+	NESTED TABLE hasIntAgreements STORE AS hasIntAgreements_nt(
+	(NESTED_TABLE_ID PRIMARY KEY)
+		NESTED TABLE hasAddendums STORE AS hasAddendums_nt)
+	NESTED TABLE hasTestAgreements STORE AS hasTestAgreements_nt
+    OBJECT IDENTIFIER IS PRIMARY KEY; 
 /
 
 /* CREATE TABLE agreementCols OF AgreementCol_ob (
@@ -23,7 +30,6 @@ CREATE TABLE PDIS OF PDI_ob (
         CHECK (hasSpecialty IS NOT NULL)
         --OBJECT IDENTIFIER IS PRIMARY KEY
         ); 
-
 /
 
 CREATE TABLE students OF Student_ob (PRIMARY KEY (NIF));
