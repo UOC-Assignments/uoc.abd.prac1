@@ -44,6 +44,13 @@ VALUES ('COMPUTER ARCHITECTURES',
 );
 
 INSERT INTO lresearches
+VALUES ('SOFTWARE ENGINEERING',
+        'Computer software modeling, design and implementation',
+        '1-January-2020',
+		'1-January-2030'
+);
+
+INSERT INTO lresearches
 VALUES ('QUANTUM PHYSICS',
         'Study of the physical properties of nature at the scale of atoms and subatomic particles',
         '1-January-2020',
@@ -68,7 +75,7 @@ VALUES ('11111111B',
 );
 
 INSERT INTO PDIS 
-VALUES ('2222222B',
+VALUES ('22222222B',
         444444,
         fullname('Marie','Skłodowska','Curie'),
         'PHYSICS',
@@ -77,7 +84,7 @@ VALUES ('2222222B',
 );
 
 INSERT INTO PDIS 
-VALUES ('2222222A',
+VALUES ('22222222B',
         22222,
         fullname('Marie','Sklodowska','Curie'),
         'PHYSICS',
@@ -100,13 +107,25 @@ INSERT INTO AgreementCols
 VALUES ('1-January-2020', 
         '1-January-2021', 
         (select ref(u) from universities u where u.name='Universitat Oberta de Catalunya'), 
-        (select ref(c) from companies c where c.businessName='IBM'),
+        (select ref(c) from companies c where c.bussinessName='IBM'),
         'QUANTUM COMPUTING RESEARCH COLABORATION', 
 		'Y',
-		(select ref(s) from PDI s where s.NIF='1111111B'),
-        lresearch_va((select ref(r1) from LResearch r1 where r1.name='COMPUTER ARCHITECTURES'),
-		             (select ref(r2) from LResearch r2 where r2.name='QUANTUM PHYSICS'),
-		             (select ref(r3) from LResearch r3 where r3.name='ENGINEERING'),
-		)
+		(select ref(s) from PDIS s where s.NIF='22222222B'),
+        refLResearch_va((select ref(r1) from LResearches r1 where r1.name='COMPUTER ARCHITECTURES'),
+		             (select ref(r2) from LResearches r2 where r2.name='QUANTUM PHYSICS'),
+		             (select ref(r3) from LResearches r3 where r3.name='ENGINEERING'))
 );
 
+INSERT INTO universities
+
+UPDATE universities SET hasAgreements = AgreementCol_tab ( AgreementCol_ob (
+        '1-January-2020', 
+        '1-January-2021', 
+        (select ref(u) from universities u where u.name='Universitat Oberta de Catalunya'), 
+        (select ref(c) from companies c where c.bussinessName='IBM'),
+        'BLACK HOLE SIMULATOR PROJECT', 
+		'Y',
+		(select ref(s) from PDIS s where s.NIF='11111111B'),
+        refLResearch_va((select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
+		             (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))))
+);
