@@ -99,9 +99,12 @@ VALUES ('Z12345678',
         'COMPUTING'
 );
 
+/* ************** VERSIÓ AMB OUTER NESTED TABLE DE SUPERTIPUS AGREEMENT **************** */
+
 /* INSERIR A LA NESTED TABLE hasAgreements_nt FILES NOVES D'UN SUBTIPUS D'AQUESTA: 
 INSERIM FILES DE TIPUS AGREEMENTCOL (SUBCLASSE) EN UNA TAULA DE TIPUS AGREEMENT (SUPERCLASSE)*/
 
+/*
 INSERT INTO TABLE (SELECT c.hasAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementCol_ob (
         '1-January-2020', 
@@ -126,7 +129,7 @@ VALUES (AgreementCol_ob (
 		             (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')
         ))
 );
-
+*/
 /* SI VOLEM ACTUALITZAR UNA FILERA D'UN NESTED TABLE PROCEDIM COM SEGUEIX */
 
 /*UPDATE companies 
@@ -140,14 +143,33 @@ SET hasAgreements = Agreement_tab ( AgreementCol_ob (
 		             (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')))                     
         )
 WHERE businessname like 'IBM';*/
-
+/*
 INSERT INTO TABLE (SELECT c.hasAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementInt_ob (
         '1-January-2020', 
         '1-January-2025', 
         fullname((select ref(r1) from PDIS r1 where r1.NIF='11111111B')
         ))
+);*/
+
+/* ************** VERSIÓ AMB OUTER NESTED TABLE DE SUBTIPUS AGREEMENTCOL I AGREEMENTINT **************** */
+
+INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
+(universityManager)
+VALUES (fullname('Bob','Nesta','Marley'))
 );
 
+INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementCol_ob (
+        '1-January-2020', 
+        '1-January-2045',
+        'QUANTUM COMPUTING RESEARCH COLABORATION', 
+		'N',
+		(select ref(s) from PDIS s where s.NIF='22222222B'),
+        refLResearch_va((select ref(r1) from LResearches r1 where r1.name='QUANTUM PHYSICS'),
+		             (select ref(r2) from LResearches r2 where r2.name='ENGINEERING'),
+					 (select ref(r2) from LResearches r2 where r2.name='COMPUTER ARCHITECTURES')
+        ))
+);
 
 COMMIT;

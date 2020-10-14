@@ -26,12 +26,13 @@ CREATE OR REPLACE TYPE Company_ob AS OBJECT(
 CREATE OR REPLACE TYPE Agreement_ob AS OBJECT(
 	startDate date,
 	endDate date
-)NOT FINAL; --AFEGIR NOT INSTANTIABLE
+)NOT FINAL; --ADD NOT INSTANTIABLE
 
 /
 
 /*startDate, endDate i goalsDescription han de ser PK (TO-DO)*/
-CREATE OR REPLACE TYPE AgreementCol_ob UNDER Agreement_ob(
+
+CREATE OR REPLACE TYPE AgreementTest_ob UNDER Agreement_ob(
 	goalsDescription VARCHAR(1000),
 	extendPeriod VARCHAR(1) 
 );

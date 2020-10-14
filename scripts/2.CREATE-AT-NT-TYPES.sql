@@ -1,4 +1,11 @@
-CREATE or REPLACE TYPE Agreement_tab AS TABLE OF Agreement_ob;
+--CREATE or REPLACE TYPE Agreement_tab AS TABLE OF Agreement_ob;
+
+CREATE or REPLACE TYPE AgreementsInt_tab AS TABLE OF AgreementInt_ob;
+
+/
+
+
+CREATE or REPLACE TYPE AgreementsTest_tab AS TABLE OF AgreementTest_ob;
 
 /
 
