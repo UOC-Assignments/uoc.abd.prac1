@@ -33,19 +33,3 @@ ALTER TYPE PDI_ob ADD ATTRIBUTE(
 )CASCADE;
 
 /
-
-
-CREATE TABLE companies OF Company_ob 
-    (PRIMARY KEY (CIF)) 
-    NESTED TABLE hasAgreements STORE AS hasAgreements_nt
-(NESTED TABLE testNestedTable STORE AS hasAddendums_nt); 
-
-
-ORA-02320: failure in creating storage table for nested table column HASAGREEMENTS
-ORA-00904: : invalid identifier
-02320. 00000 -  "failure in creating storage table for nested table column %s"
-*Cause:    An error occurred while creating the storage table for the
-           specified nested table column.
-*Action:   See the messages that follow for more details. If the situation
-           they describe can be corrected, do so; otherwise contact Oracle
-           Support.
