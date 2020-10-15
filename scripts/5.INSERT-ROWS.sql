@@ -99,11 +99,14 @@ VALUES ('Z12345678',
   'COMPUTING'
 );
 
+/* BUG#001 - Si no faig un UPDATE primer, NO es poden fer INSERTS a la nested table ( Error report - ORA-22908: reference to NULL table value )*/
+/* SOLUCIÓ -> UTILITZAR DEFAULT PER A CRIDAR AUTOMATICAMENT EL CONSTRUCTOR (final p.31 M2)*/
+
 UPDATE companies 
 SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
   '1-January-2020', 
   '1-January-2045',
-  'QUANTUM COMPUTING RESEARCH COLABORATION', 
+  'BLACK HOLE SIMULATOR PROJECT', 
   'N',
   (select ref(s) from PDIS s where s.NIF='22222222B'),
   refLResearch_va(
@@ -125,9 +128,6 @@ VALUES (AgreementCol2_ob (
     (select ref(r3) from LResearches r3 where r3.name='COMPUTER ARCHITECTURES')
   ))
 );
-
-/* BUG#001 - Si no faig un UPDATE primer, NO es poden fer INSERTS a la nested table ( Error report - ORA-22908: reference to NULL table value )*/
-/* SOLUCIÓ -> UTILITZAR DEFAULT PER A CRIDAR AUTOMATICAMENT EL CONSTRUCTOR (final p.31 M2)*/
 
 /* UPDATE companies 
 SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
