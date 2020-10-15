@@ -17,10 +17,21 @@ BUG #002 -> SI NO S'EXECUTA DOS COPS LA CONSULTA, LES DADES DEL VARRAY "hasLines
 apareixen com a null (potser indexar ajuda, o declarar clau primaria com a object id)
 */
 
-select c.businessname, 
+select c.businessname,
+    nt.startDate AS START_DATE,
+    nt.endDate AS END_DATE,
     nt.goalsDescription AS GOALS, 
     nt.extendPeriod AS EXTEND,
     nt.hasLinesOfResearch AS LINES_OF_RESEARCH,
     nt.hasStakeholder.completeName.name AS PDI_NAME,
     nt.hasStakeholder.completeName.surname1 AS PDI_SURNAMENAME
 from companies c, table (c.hasColAgreements) nt;
+
+select c.businessname, 
+    nt.startDate AS START_DATE,
+    nt.endDate AS END_DATE,
+    nt.universityManager AS UNIV_MANAGER
+from companies c, table (c.hasIntAgreements) nt;
+
+SELECT businessname, cif, postalcode, sector FROM companies;
+

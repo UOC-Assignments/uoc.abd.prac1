@@ -129,4 +129,22 @@ VALUES (AgreementCol2_ob (
   ))
 );
 
+UPDATE companies 
+SET hasIntAgreements = AgreementsInt_tab ( AgreementInt_ob (
+  '1-January-2020', 
+  '1-January-2045',
+  fullname('Michael','J.','Fox'),
+  null
+  ))
+WHERE businessname like 'IBM';
+
+INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementInt_ob (
+  '1-January-2020', 
+  '1-January-2030', 
+  fullname('Budd','Spencer','Junior'),
+  null
+  )
+);
+
 COMMIT;
