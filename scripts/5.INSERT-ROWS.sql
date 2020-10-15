@@ -92,7 +92,7 @@ VALUES ('22222222B',
   (select ref(r) from lResearches r where name='RADIOACTIVITY') 
 );
 
-INSERT INTO companies (CIF,businessName,postalCode,sector) -- THIS WAY THE hasAgreement_tab table constructor is automatically called (p.32 M2)
+INSERT INTO companies (CIF,businessName,postalCode,sector) -- THIS WAY THE nested tables constructors are automatically called (p.32 M2)
 VALUES ('Z12345678',
   'IBM',
   08080,
@@ -102,28 +102,30 @@ VALUES ('Z12345678',
 /* INSERIR A LA NESTED TABLE hasAgreements_nt FILES NOVES D'UN SUBTIPUS D'AQUESTA: 
 INSERIM FILES DE TIPUS AGREEMENTCOL (SUBCLASSE) EN UNA TAULA DE TIPUS AGREEMENT (SUPERCLASSE)*/
 
-INSERT INTO TABLE (SELECT c.hasAgreements FROM companies c WHERE c.businessname like 'IBM') 
-VALUES (AgreementCol_ob (
-  '1-January-2020', 
-  '1-January-2045',
-  'QUANTUM COMPUTING RESEARCH COLABORATION', 
-		'N',
-		(select ref(s) from PDIS s where s.NIF='22222222B'),
-  refLResearch_va((select ref(r1) from LResearches r1 where r1.name='QUANTUM PHYSICS'),
-		       (select ref(r2) from LResearches r2 where r2.name='ENGINEERING'),
-					 (select ref(r2) from LResearches r2 where r2.name='COMPUTER ARCHITECTURES')
-  ))
-);
-
-INSERT INTO TABLE (SELECT c.hasAgreements FROM companies c WHERE c.businessname like 'IBM') 
-VALUES (AgreementCol_ob (
+INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementCol2_ob (
   '1-January-2020', 
   '1-January-2025', 
   'BLACK HOLE SIMULATOR PROJECT', 
-		'Y',
-		(select ref(s) from PDIS s where s.NIF='11111111B'),
-  refLResearch_va((select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
-		       (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')
+  'Y',
+  (select ref(s) from PDIS s where s.NIF='11111111B'),
+  refLResearch_va(
+    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
+	(select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')
+  ))
+);
+
+INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementCol2_ob (
+  '1-January-2020', 
+  '1-January-2030', 
+  'QUANTUM COMPUTING RESEARCH COLABORATION', 
+  'N',
+  (select ref(s) from PDIS s where s.NIF='22222222B'),
+  refLResearch_va(
+    (select ref(r1) from LResearches r1 where r1.name='QUANTUM PHYSICS'),
+	(select ref(r2) from LResearches r2 where r2.name='ENGINEERING'),
+    (select ref(r3) from LResearches r3 where r3.name='COMPUTER ARCHITECTURES')
   ))
 );
 
@@ -140,14 +142,5 @@ SET hasAgreements = Agreement_tab ( AgreementCol_ob (
 		       (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')))         
   )
 WHERE businessname like 'IBM';*/
-
-INSERT INTO TABLE (SELECT c.hasAgreements FROM companies c WHERE c.businessname like 'IBM') 
-VALUES (AgreementInt_ob (
-  '1-January-2020', 
-  '1-January-2025', 
-  fullname((select ref(r1) from PDIS r1 where r1.NIF='11111111B')
-  ))
-);
-
 
 COMMIT;
