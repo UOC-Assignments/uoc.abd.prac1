@@ -138,9 +138,9 @@ VALUES (AgreementCol2_ob (
 
 INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementInt_ob (
+  '1-January-2015', 
   '1-January-2020', 
-  '1-January-2030', 
-  fullname('Budd','Spencer','Junior'),
+  fullname('Kurt','Vogel','Russell'),
   null
   )
 );
@@ -148,24 +148,27 @@ VALUES (AgreementInt_ob (
 INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementInt_ob (
   '1-January-2020', 
-  '1-January-2024',
+  '1-January-2025',
   fullname('Michael','J.','Fox'),
   null
   )
 );
 
-/* INSERT ADDENDUMS --> S'HA DE FER UN INSERT A LA INNER NESTED TABLE DE COMPANIES (companies.hasIntAgreements.hasAddendums) */
+/* INSERT ADDENDUMS --> S'HA D'INICIALITZAR LA INNER NESTED TABLE "companies.hasIntAgreements.hasAddendums" CRIDANT AL CONSTRUCTOR -> Addendums_tab() */
 
-UPDATE companies.hasIntAgreements 
+/*UPDATE companies.hasIntAgreements 
     hasAddendums = NEW Addendums_tab()
-WHERE businessname like 'IBM';
+WHERE businessname like 'IBM';*/ --FAIL
+
+UPDATE TABLE(SELECT c.hasIntAgreements 
+                  FROM companies c
+                  WHERE c.businessname like 'IBM') nt   
+SET nt.hasAddendums = Addendums_tab()
+WHERE nt.startDate = '01/January/2020' AND nt.endDate = '01/January/2021';
+
 
 COMMIT;
 
-UPDATE companies 
-SET hasColAgreements = NEW AgreementsCol2_tab(),
-    hasIntAgreements = NEW AgreementsInt_tab()
-WHERE businessname like 'IBM';
 
 /* ARCHIVE */
 
