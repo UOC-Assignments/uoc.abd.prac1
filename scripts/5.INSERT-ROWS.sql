@@ -92,6 +92,8 @@ VALUES ('22222222B',
   (select ref(r) from lResearches r where name='RADIOACTIVITY') 
 );
 
+/* ABANS DE PODER INSERIR FILES A LES NESTED TABLES HEM DE CREAR UNA INSTÀNCIA DE CLASSE COMPANY PER A QUE LA RELACIÓ AMB AGREEMENT PUGUI EXISTIR */
+
 INSERT INTO companies (CIF,businessName,postalCode,sector) -- THIS WAY THE nested tables constructors are automatically called (p.32 M2)
 VALUES ('Z12345678',
   'IBM',
@@ -100,21 +102,13 @@ VALUES ('Z12345678',
 );
 
 /* BUG#001 - Si no faig un UPDATE primer, NO es poden fer INSERTS a la nested table ( Error report - ORA-22908: reference to NULL table value )*/
-/* SOLUCIÓ -> UTILITZAR DEFAULT PER A CRIDAR AUTOMATICAMENT EL CONSTRUCTOR (final p.31 M2)*/
+/* SOLUCIÓ -> https://stackoverflow.com/questions/49565207/create-a-nested-table-and-insert-data-only-in-the-inner-table */
 
 UPDATE companies 
-SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
-  '1-January-2020', 
-  '1-January-2045',
-  'BLACK HOLE SIMULATOR PROJECT', 
-  'N',
-  (select ref(s) from PDIS s where s.NIF='22222222B'),
-  refLResearch_va(
-    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
-    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
-  ))
+SET hasColAgreements = NEW AgreementsCol2_tab(),
+    hasIntAgreements = NEW AgreementsInt_tab()
 WHERE businessname like 'IBM';
-
+  
 INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementCol2_ob (
   '1-January-2020', 
@@ -129,15 +123,6 @@ VALUES (AgreementCol2_ob (
   ))
 );
 
-UPDATE companies 
-SET hasIntAgreements = AgreementsInt_tab ( AgreementInt_ob (
-  '1-January-2020', 
-  '1-January-2045',
-  fullname('Michael','J.','Fox'),
-  null
-  ))
-WHERE businessname like 'IBM';
-
 INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementInt_ob (
   '1-January-2020', 
@@ -147,4 +132,44 @@ VALUES (AgreementInt_ob (
   )
 );
 
+/* INSERT ADDENDUMS --> S'HA DE FER UN INSERT A LA INNER NESTED TABLE DE COMPANIES (companies.hasIntAgreements.hasAddendums) */
+
 COMMIT;
+
+/* ARCHIVE */
+
+/* UPDATE companies 
+SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
+  '1-January-2020', 
+  '1-January-2045',
+  'BLACK HOLE SIMULATOR PROJECT', 
+  'N',
+  (select ref(s) from PDIS s where s.NIF='22222222B'),
+  refLResearch_va(
+    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
+    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
+  ))
+WHERE businessname like 'IBM';*/
+
+/* UPDATE companies 
+SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
+  '1-January-2020', 
+  '1-January-2045',
+  'BLACK HOLE SIMULATOR PROJECT', 
+  'N',
+  (select ref(s) from PDIS s where s.NIF='22222222B'),
+  refLResearch_va(
+    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
+    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
+  ))
+WHERE businessname like 'IBM'; */
+
+/* UPDATE companies 
+SET hasIntAgreements = AgreementsInt_tab ( AgreementInt_ob (
+  '1-January-2020', 
+  '1-January-2045',
+  fullname('Michael','J.','Fox'),
+  null
+  ))
+WHERE businessname like 'IBM'; */
+
