@@ -33,6 +33,12 @@ CREATE OR REPLACE TYPE AgreementCol_ob UNDER Agreement_ob(
 )FINAL;
 /
 
+CREATE OR REPLACE TYPE AgreementCol2_ob UNDER Agreement_ob(
+  goalsDescription VARCHAR(1000),
+  extendPeriod VARCHAR(1)
+)FINAL;
+/
+
 CREATE OR REPLACE TYPE AgreementInt_ob UNDER Agreement_ob(
   universityManager fullname
 )FINAL;

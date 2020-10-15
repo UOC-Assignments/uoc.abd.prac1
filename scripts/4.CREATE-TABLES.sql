@@ -1,7 +1,7 @@
 CREATE TABLE companies OF Company_ob (CIF PRIMARY KEY) 
   NESTED TABLE hasColAgreements STORE AS hasColAgreements_nt
-  --NESTED TABLE hasintAgreements STORE AS hasIntAgreements_nt
-   --(NESTED TABLE hasAddendums STORE AS hasAddendums_nt); 
+  NESTED TABLE hasIntAgreements STORE AS hasIntAgreements_nt
+    (NESTED TABLE hasAddendums STORE AS hasAddendums_nt); 
 /
 
 /* CREATE TABLE agreementCols OF AgreementCol_ob (
