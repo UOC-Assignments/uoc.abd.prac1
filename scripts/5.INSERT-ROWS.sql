@@ -123,6 +123,19 @@ VALUES (AgreementCol2_ob (
   ))
 );
 
+INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementCol2_ob (
+  '1-January-2020', 
+  '1-January-2025',
+  'BLACK HOLE SIMULATOR PROJECT', 
+  'Y',
+  (select ref(s) from PDIS s where s.NIF='11111111B'),
+  refLResearch_va(
+    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
+    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')
+  ))
+);
+
 INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementInt_ob (
   '1-January-2020', 
@@ -132,9 +145,27 @@ VALUES (AgreementInt_ob (
   )
 );
 
+INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementInt_ob (
+  '1-January-2020', 
+  '1-January-2045',
+  fullname('Michael','J.','Fox'),
+  null
+  )
+);
+
 /* INSERT ADDENDUMS --> S'HA DE FER UN INSERT A LA INNER NESTED TABLE DE COMPANIES (companies.hasIntAgreements.hasAddendums) */
 
+UPDATE companies.hasIntAgreements 
+    hasAddendums = NEW Addendums_tab()
+WHERE businessname like 'IBM';
+
 COMMIT;
+
+UPDATE companies 
+SET hasColAgreements = NEW AgreementsCol2_tab(),
+    hasIntAgreements = NEW AgreementsInt_tab()
+WHERE businessname like 'IBM';
 
 /* ARCHIVE */
 
