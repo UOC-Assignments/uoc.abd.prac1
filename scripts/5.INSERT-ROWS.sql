@@ -115,9 +115,9 @@ SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
 WHERE businessname like 'IBM';
 
 /* INSERIR A LA NESTED TABLE hasAgreements_nt FILES NOVES D'UN SUBTIPUS D'AQUESTA: 
-INSERIM FILES DE TIPUS AGREEMENTCOL (SUBCLASSE) EN UNA TAULA DE TIPUS AGREEMENT (SUPERCLASSE)
+INSERIM FILES DE TIPUS AGREEMENTCOL (SUBCLASSE) EN UNA TAULA DE TIPUS AGREEMENT (SUPERCLASSE) 
 
-INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
+INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM' ) 
 VALUES (AgreementCol2_ob (
   '1-January-2020', 
   '1-January-2025', 
