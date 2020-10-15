@@ -1,10 +1,10 @@
-CREATE or REPLACE TYPE Agreement_tab AS TABLE OF Agreement_ob;
+CREATE or REPLACE TYPE AgreementCol_tab AS TABLE OF AgreementCol_ob;
+/
+
+CREATE or REPLACE TYPE AgreementInt_tab AS TABLE OF AgreementInt_ob;
 /
 
 CREATE or REPLACE TYPE Addendum_tab AS TABLE OF Addendum_ob;
-/
-
-CREATE or REPLACE TYPE PDI_tab AS TABLE OF PDI_ob;
 /
 
 CREATE or REPLACE TYPE RefStudent_va AS VARRAY(5) OF REF Student_ob NOT NULL;

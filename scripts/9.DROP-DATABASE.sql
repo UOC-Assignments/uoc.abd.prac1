@@ -9,6 +9,7 @@ DROP TABLE addendums;
 DROP TYPE PDI_tab FORCE;
 DROP TYPE Company_tab FORCE;
 DROP TYPE AgreementCol_tab FORCE;
+DROP TYPE AgreementInt_tab FORCE;
 DROP TYPE Agreement_tab FORCE;
 DROP TYPE Addendum_tab FORCE;
 DROP TYPE RefLResearch_va FORCE;

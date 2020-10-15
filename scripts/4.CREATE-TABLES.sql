@@ -1,6 +1,7 @@
 CREATE TABLE companies OF Company_ob (CIF PRIMARY KEY) 
-  NESTED TABLE hasAgreements STORE AS hasAgreements_nt
-   (NESTED TABLE hasAddendums STORE AS hasAddendums_nt); 
+  NESTED TABLE hasColAgreements STORE AS hasColAgreements_nt
+  --NESTED TABLE hasintAgreements STORE AS hasIntAgreements_nt
+   --(NESTED TABLE hasAddendums STORE AS hasAddendums_nt); 
 /
 
 /* CREATE TABLE agreementCols OF AgreementCol_ob (
@@ -11,7 +12,8 @@ CREATE TABLE companies OF Company_ob (CIF PRIMARY KEY)
 / */
 
 CREATE TABLE PDIS OF PDI_ob (NIF PRIMARY KEY)
-  OBJECT IDENTIFIER IS PRIMARY KEY; 
+/* Si ho activem passa el següent */
+  --OBJECT IDENTIFIER IS PRIMARY KEY; 
 /
 
 ALTER TABLE PDIS
@@ -19,11 +21,11 @@ ALTER TABLE PDIS
 /
 
 CREATE TABLE students OF Student_ob (NIF PRIMARY KEY)
-  OBJECT IDENTIFIER IS PRIMARY KEY;
+  --OBJECT IDENTIFIER IS PRIMARY KEY;
 /
 
 CREATE TABLE staff OF Staff_ob (NIF PRIMARY KEY)
-  OBJECT IDENTIFIER IS PRIMARY KEY; 
+  --OBJECT IDENTIFIER IS PRIMARY KEY; 
 /
 
 CREATE TABLE lResearches OF LResearch_ob (name PRIMARY KEY);
