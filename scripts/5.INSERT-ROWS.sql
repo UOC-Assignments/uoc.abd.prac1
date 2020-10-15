@@ -99,20 +99,48 @@ VALUES ('Z12345678',
   'COMPUTING'
 );
 
+UPDATE companies 
+SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
+  '1-January-2020', 
+  '1-January-2045',
+  'QUANTUM COMPUTING RESEARCH COLABORATION', 
+  'N',
+  (select ref(s) from PDIS s where s.NIF='22222222B'),
+  refLResearch_va(
+    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
+    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
+  ))
+WHERE businessname like 'IBM';
+
+INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
+VALUES (AgreementCol2_ob (
+  '1-January-2020', 
+  '1-January-2030', 
+  'QUANTUM COMPUTING RESEARCH COLABORATION', 
+  'N',
+  (select ref(s) from PDIS s where s.NIF='22222222B'),
+  refLResearch_va(
+    (select ref(r1) from LResearches r1 where r1.name='QUANTUM PHYSICS'),
+	(select ref(r2) from LResearches r2 where r2.name='ENGINEERING'),
+    (select ref(r3) from LResearches r3 where r3.name='COMPUTER ARCHITECTURES')
+  ))
+);
+
 /* BUG#001 - Si no faig un UPDATE primer, NO es poden fer INSERTS a la nested table ( Error report - ORA-22908: reference to NULL table value )*/
 /* SOLUCIÓ -> UTILITZAR DEFAULT PER A CRIDAR AUTOMATICAMENT EL CONSTRUCTOR (final p.31 M2)*/
 
-UPDATE companies 
+/* UPDATE companies 
 SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
-        '1-January-2020', 
-        '1-January-2045',
-        'QUANTUM COMPUTING RESEARCH COLABORATION', 
-        'N',
-        (select ref(s) from PDIS s where s.NIF='22222222B'),
-        refLResearch_va((select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
-		             (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
-        ))
-WHERE businessname like 'IBM';
+  '1-January-2020', 
+  '1-January-2045',
+  'QUANTUM COMPUTING RESEARCH COLABORATION', 
+  'N',
+  (select ref(s) from PDIS s where s.NIF='22222222B'),
+  refLResearch_va(
+    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
+    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
+  ))
+WHERE businessname like 'IBM'; */
 
 /* INSERIR A LA NESTED TABLE hasAgreements_nt FILES NOVES D'UN SUBTIPUS D'AQUESTA: 
 INSERIM FILES DE TIPUS AGREEMENTCOL (SUBCLASSE) EN UNA TAULA DE TIPUS AGREEMENT (SUPERCLASSE) 
