@@ -148,7 +148,7 @@ VALUES (AgreementInt_ob (
 INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementInt_ob (
   '1-January-2020', 
-  '1-January-2045',
+  '1-January-2024',
   fullname('Michael','J.','Fox'),
   null
   )
