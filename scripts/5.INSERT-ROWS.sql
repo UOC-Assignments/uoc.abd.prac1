@@ -129,47 +129,4 @@ VALUES (AgreementCol2_ob (
   ))
 );
 
-/* UPDATE companies 
-SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
-  '1-January-2020', 
-  '1-January-2045',
-  'QUANTUM COMPUTING RESEARCH COLABORATION', 
-  'N',
-  (select ref(s) from PDIS s where s.NIF='22222222B'),
-  refLResearch_va(
-    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
-    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
-  ))
-WHERE businessname like 'IBM'; */
-
-/* INSERIR A LA NESTED TABLE hasAgreements_nt FILES NOVES D'UN SUBTIPUS D'AQUESTA: 
-INSERIM FILES DE TIPUS AGREEMENTCOL (SUBCLASSE) EN UNA TAULA DE TIPUS AGREEMENT (SUPERCLASSE) 
-
-INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM' ) 
-VALUES (AgreementCol2_ob (
-  '1-January-2020', 
-  '1-January-2025', 
-  'BLACK HOLE SIMULATOR PROJECT', 
-  'Y',
-  (select ref(s) from PDIS s where s.NIF='11111111B'),
-  refLResearch_va(
-    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
-	(select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS')
-  ))
-);
-
-INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
-VALUES (AgreementCol2_ob (
-  '1-January-2020', 
-  '1-January-2030', 
-  'QUANTUM COMPUTING RESEARCH COLABORATION', 
-  'N',
-  (select ref(s) from PDIS s where s.NIF='22222222B'),
-  refLResearch_va(
-    (select ref(r1) from LResearches r1 where r1.name='QUANTUM PHYSICS'),
-	(select ref(r2) from LResearches r2 where r2.name='ENGINEERING'),
-    (select ref(r3) from LResearches r3 where r3.name='COMPUTER ARCHITECTURES')
-  ))
-);*/
-
 COMMIT;

@@ -11,7 +11,11 @@ DE TIPUS AGREEMENT CONTENEN ATRIBUTS CORRESPONENTS AL SUBTIPUS MITJANÇANT LA SE
     treat(value(nt) as AgreementCol_ob).hasStakeholder.completeName.surname1 AS PDI_SURNAMENAME
 from companies c, table (c.hasAgreements) nt; */
 
-/* SELECCIONAR ALGUNES COLUMNES DE CADA FILA DE LA TAULA NIUADA "hasColAgreements_nt" */
+/* SELECCIONAR ALGUNES COLUMNES DE CADA FILA DE LA TAULA NIUADA "hasColAgreements_nt" 
+
+BUG #002 -> SI NO S'EXECUTA DOS COPS LA CONSULTA, LES DADES DEL VARRAY "hasLinesOfResearch" 
+apareixen com a null (potser indexar ajuda, o declarar clau primaria com a object id)
+*/
 
 select c.businessname, 
     nt.goalsDescription AS GOALS, 
