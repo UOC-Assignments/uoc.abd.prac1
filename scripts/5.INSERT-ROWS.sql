@@ -1,26 +1,4 @@
-INSERT INTO staff 
-VALUES ('11111111C',
-  fullname('Elon','Reeve','Musk')
-);
-
-INSERT INTO staff 
-VALUES ('22222222C',
-  fullname('Sheri','MacKenzie','Tuttle')
-);
-
-INSERT INTO students 
-VALUES ('11111111A',
-  111111,
-  fullname('John','Winston','Lenon'),
-  currentStudiesList('PHILOSOPHY','CONTEMPORARY ARTS')
-);
-
-INSERT INTO students 
-VALUES ('22222222A',
-  222222,
-  fullname('Bob','Nesta','Marley'),
-  currentStudiesList('BOTANICS','BIOENGINEERING','BIOLOGY')
-);
+/* 1. INSERT ROWS IN "lresearches" TABLE */
 
 INSERT INTO lresearches
 VALUES ('ASTROPHYSICS',
@@ -64,10 +42,63 @@ VALUES ('ENGINEERING',
 		'1-January-2030'
 );
 
+/* 2. INSERT ROWS IN "staff" TABLE */
+
+INSERT INTO staff 
+VALUES ('11111111C',
+  fullname('Elon','Reeve','Musk')
+);
+
+INSERT INTO staff 
+VALUES ('22222222C',
+  fullname('Sheri','MacKenzie','Tuttle')
+);
+
+INSERT INTO staff 
+VALUES ('33333333C',
+  fullname('Mark','Elliot','Zuckerberg')
+);
+
+INSERT INTO staff 
+VALUES ('44444444C',
+  fullname('William','Henry','Gates')
+);
+
+/* 3. INSERT ROWS IN "students" TABLE */
+
+INSERT INTO students 
+VALUES ('11111111A',
+  111111,
+  fullname('John','Winston','Lenon'),
+  currentStudiesList('PHILOSOPHY','CONTEMPORARY ARTS')
+);
+
+INSERT INTO students 
+VALUES ('22222222A',
+  222222,
+  fullname('Bob','Nesta','Marley'),
+  currentStudiesList('BOTANICS','BIOENGINEERING','BIOLOGY')
+);
+
+INSERT INTO students 
+VALUES ('33333333A',
+  333333,
+  fullname('Tina','Turner',''),
+  currentStudiesList('MECHANICAL ENGINNERING','AERONAUTICS','ELECTRONICS')
+);
+
+INSERT INTO students 
+VALUES ('44444444A',
+  444444,
+  fullname('Maddonna','Louise','Ciccone'),
+  currentStudiesList('GENERAL SURGERY','PEDIATRICS')
+);
+
+/* 4. INSERT ROWS IN "PDIS" TABLE */
 
 INSERT INTO PDIS 
 VALUES ('11111111B',
-  333333,
+  555555,
   fullname('Mileva','Marić',''),
   'PHYSICS',
   '19-December-1875',
@@ -76,7 +107,7 @@ VALUES ('11111111B',
 
 INSERT INTO PDIS 
 VALUES ('22222222B',
-  444444,
+  666666,
   fullname('Marie','Skłodowska','Curie'),
   'PHYSICS',
   '7-November-1867',
@@ -85,12 +116,14 @@ VALUES ('22222222B',
 
 INSERT INTO PDIS 
 VALUES ('22222222B',
-  22222,
+  666666,
   fullname('Marie','Sklodowska','Curie'),
   'PHYSICS',
   '7-November-1867',
   (select ref(r) from lResearches r where name='RADIOACTIVITY') 
 );
+
+/* 5. INSERT ROWS IN "companies" TABLE */
 
 /* ABANS DE PODER INSERIR FILES A LES NESTED TABLES HEM DE CREAR UNA INSTÀNCIA DE CLASSE COMPANY PER A QUE LA RELACIÓ AMB AGREEMENT PUGUI EXISTIR */
 
@@ -101,13 +134,16 @@ VALUES ('Z12345678',
   'COMPUTING'
 );
 
-/* BUG#001 - Si no faig un UPDATE primer, NO es poden fer INSERTS a la nested table ( Error report - ORA-22908: reference to NULL table value )*/
-/* SOLUCIÓ -> https://stackoverflow.com/questions/49565207/create-a-nested-table-and-insert-data-only-in-the-inner-table */
+/* BUG#001 - Si no es fa UPDATE primer, NO es poden fer INSERTS a les nested tables ( Error report - ORA-22908: reference to NULL table value )*/
+/* SOLUCIÓ --> PRIMER S'HA D'INICIALITZAR LA NESTED TABLE "companies.hasIntAgreements" INVOCANT ELS MÈTODE CONSTRUCTORS -> AgreementsCol_tab() i AgreementsInt_tab() */
+/* FONT    --> https://stackoverflow.com/questions/49565207/create-a-nested-table-and-insert-data-only-in-the-inner-table */
 
 UPDATE companies 
 SET hasColAgreements = NEW AgreementsCol2_tab(),
     hasIntAgreements = NEW AgreementsInt_tab()
 WHERE businessname like 'IBM';
+
+/* 6. INSERT ROWS IN "companies.hasColAgreements_nt" NESTED TABLE */
   
 INSERT INTO TABLE (SELECT c.hasColAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementCol2_ob (
@@ -136,6 +172,8 @@ VALUES (AgreementCol2_ob (
   ))
 );
 
+/* 7. INSERT ROWS IN "companies.hasIntAgreements_nt" MULTILEVEL NESTED TABLE (OUTER)*/
+
 INSERT INTO TABLE (SELECT c.hasIntAgreements FROM companies c WHERE c.businessname like 'IBM') 
 VALUES (AgreementInt_ob (
   '1-January-2015', 
@@ -154,13 +192,15 @@ VALUES (AgreementInt_ob (
   )
 );
 
-/* INSERT ADDENDUMS --> PRIMER S'HA D'INICIALITZAR LA INNER NESTED TABLE "companies.hasIntAgreements.hasAddendums" CRIDANT AL CONSTRUCTOR -> Addendums_tab() */
+/* ARA S'HA D'INICIALITZAR LA INNER NESTED TABLE "companies.hasIntAgreements.hasAddendums" CRIDANT AL CONSTRUCTOR -> Addendums_tab() */
 
 UPDATE TABLE(SELECT c.hasIntAgreements 
                   FROM companies c
                   WHERE c.businessname like 'IBM') nt   
 SET nt.hasAddendums = Addendums_tab()
 WHERE nt.startDate = '01/January/2015' AND nt.endDate = '01/January/2020';
+
+/* 8. INSERT ROWS IN "companies.hasIntAgreements.hasAddendums_nt" MULTILEVEL NESTED TABLE (INNER) */
 
 INSERT INTO TABLE( SELECT nt1.hasAddendums 
   FROM TABLE( SELECT c.hasIntAgreements 
@@ -179,14 +219,6 @@ VALUES (
     (select ref(r2) from students r2 where r2.NIF='22222222A')
   ) 
 );
-
-/* AFEGIM MÉS FILES A LA MATEIXA RELACIÓ d'ADDENDUMS ANTERIOR */
-
-UPDATE TABLE(SELECT c.hasIntAgreements 
-                  FROM companies c
-                  WHERE c.businessname like 'IBM') nt   
-SET nt.hasAddendums = Addendums_tab()
-WHERE nt.startDate = '01/January/2020' AND nt.endDate = '01/January/2025';
 
 COMMIT;
 
@@ -228,3 +260,10 @@ SET hasIntAgreements = AgreementsInt_tab ( AgreementInt_ob (
   ))
 WHERE businessname like 'IBM'; */
 
+/* AFEGIM MÉS FILES A LA MATEIXA RELACIÓ d'ADDENDUMS ANTERIOR */
+
+/*UPDATE TABLE(SELECT c.hasIntAgreements 
+                  FROM companies c
+                  WHERE c.businessname like 'IBM') nt   
+SET nt.hasAddendums = Addendums_tab()
+WHERE nt.startDate = '01/January/2020' AND nt.endDate = '01/January/2025';*/
