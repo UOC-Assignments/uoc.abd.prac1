@@ -1,6 +1,3 @@
-CREATE or REPLACE TYPE AgreementsCol_tab AS TABLE OF AgreementCol_ob;
-/
-
 CREATE or REPLACE TYPE AgreementsCol2_tab AS TABLE OF AgreementCol2_ob;
 /
 

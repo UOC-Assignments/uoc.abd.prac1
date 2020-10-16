@@ -10,12 +10,6 @@ ALTER TYPE PDI_ob ADD ATTRIBUTE(
 )CASCADE;
 /
 
-ALTER TYPE AgreementCol_ob ADD ATTRIBUTE(
-  hasStakeholder REF PDI_ob,
-  hasLinesOfResearch refLResearch_va
-)CASCADE;
-/ 
-
 ALTER TYPE AgreementCol2_ob ADD ATTRIBUTE(
   hasStakeholder REF PDI_ob,
   hasLinesOfResearch refLResearch_va

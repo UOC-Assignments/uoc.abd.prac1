@@ -1,3 +1,5 @@
+--OBSERVACIÓ: A vegades (no sempre) cal executar 2 vegades la consulta per a que es mostrin les dades dels camps referenciats (que contenen un punter)
+
 /* 1. Colaboration Agreements: SELECT ROWS FROM NESTED TABLE (companies.hasColAgreements_nt) */
 
 select c.businessname,
