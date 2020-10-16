@@ -16,7 +16,7 @@ select c.businessname,
   nt.startDate AS START_DATE,
   nt.endDate AS END_DATE,
   nt.universityManager AS UNIV_MANAGER,
-  nt.hasAddendums AS ADDENDUMS_NT
+  nt.hasAddendums AS ADDENDUMS
 from companies c, table (c.hasIntAgreements) nt;
 
 /* 3. Internship Agreements - Related Addendums: SELECT ROWS FROM MULTILEVEL NESTED TABLE - INNER TABLE (companies.hasIntAgreements.hasAddendums_nt) */
