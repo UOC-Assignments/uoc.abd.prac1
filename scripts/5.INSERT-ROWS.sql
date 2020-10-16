@@ -5,7 +5,7 @@ VALUES ('11111111C',
 
 INSERT INTO staff 
 VALUES ('22222222C',
-  fullname('MacKenzie','Sheri','Tuttle')
+  fullname('Sheri','MacKenzie','Tuttle')
 );
 
 INSERT INTO students 
