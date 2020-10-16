@@ -17,7 +17,7 @@ BUG #002 -> SI NO S'EXECUTA DOS COPS LA CONSULTA, LES DADES DEL VARRAY "hasLines
 apareixen com a null (potser indexar ajuda, o declarar clau primaria com a object id)
 */
 
-/* SELECT ROWS FROM NESTED TABLE */
+/* SELECT ROWS FROM NESTED TABLE (companies.hasColAgreements_nt) */
 
 select c.businessname,
     nt.startDate AS START_DATE,

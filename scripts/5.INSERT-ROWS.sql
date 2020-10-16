@@ -4,7 +4,7 @@ VALUES ('11111111C',
 );
 
 INSERT INTO staff 
-VALUES ('2222222C',
+VALUES ('22222222C',
   fullname('MacKenzie','Sheri','Tuttle')
 );
 
@@ -16,7 +16,7 @@ VALUES ('11111111A',
 );
 
 INSERT INTO students 
-VALUES ('2222222A',
+VALUES ('22222222A',
   222222,
   fullname('Bob','Nesta','Marley'),
   currentStudiesList('BOTANICS','BIOENGINEERING','BIOLOGY')
@@ -154,18 +154,39 @@ VALUES (AgreementInt_ob (
   )
 );
 
-/* INSERT ADDENDUMS --> S'HA D'INICIALITZAR LA INNER NESTED TABLE "companies.hasIntAgreements.hasAddendums" CRIDANT AL CONSTRUCTOR -> Addendums_tab() */
-
-/*UPDATE companies.hasIntAgreements 
-    hasAddendums = NEW Addendums_tab()
-WHERE businessname like 'IBM';*/ --FAIL
+/* INSERT ADDENDUMS --> PRIMER S'HA D'INICIALITZAR LA INNER NESTED TABLE "companies.hasIntAgreements.hasAddendums" CRIDANT AL CONSTRUCTOR -> Addendums_tab() */
 
 UPDATE TABLE(SELECT c.hasIntAgreements 
                   FROM companies c
                   WHERE c.businessname like 'IBM') nt   
 SET nt.hasAddendums = Addendums_tab()
-WHERE nt.startDate = '01/January/2020' AND nt.endDate = '01/January/2021';
+WHERE nt.startDate = '01/January/2015' AND nt.endDate = '01/January/2020';
 
+INSERT INTO TABLE( SELECT nt1.hasAddendums 
+  FROM TABLE( SELECT c.hasIntAgreements 
+    FROM companies c
+    WHERE c.businessName like 'IBM') nt1
+  WHERE nt1.startDate = '01/January/2015' AND nt1.endDate = '01/January/2020')
+VALUES (
+  '01/January/2015',
+  (select ref(r1) from PDIS r1 where r1.NIF='11111111B'),
+  RefStaff_va(
+    (select ref(r1) from staff r1 where r1.NIF='11111111C'),
+    (select ref(r2) from staff r2 where r2.NIF='22222222C')
+  ), 
+  RefStudent_va(
+    (select ref(r1) from students r1 where r1.NIF='11111111A'),
+    (select ref(r2) from students r2 where r2.NIF='22222222A')
+  ) 
+);
+
+/* AFEGIM MÉS FILES A LA MATEIXA RELACIÓ d'ADDENDUMS ANTERIOR */
+
+UPDATE TABLE(SELECT c.hasIntAgreements 
+                  FROM companies c
+                  WHERE c.businessname like 'IBM') nt   
+SET nt.hasAddendums = Addendums_tab()
+WHERE nt.startDate = '01/January/2020' AND nt.endDate = '01/January/2025';
 
 COMMIT;
 
