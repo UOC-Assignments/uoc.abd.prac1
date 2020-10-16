@@ -12,7 +12,7 @@ CREATE TABLE companies OF Company_ob (CIF PRIMARY KEY)
 / */
 
 CREATE TABLE PDIS OF PDI_ob (NIF PRIMARY KEY)
-/* Si ho activem passa el següent */
+  /* Si ho activem passa el següent al inserir files a PDIS -> Error report -ORA-22979: cannot INSERT object view REF or user-defined REF */
   --OBJECT IDENTIFIER IS PRIMARY KEY; 
 /
 

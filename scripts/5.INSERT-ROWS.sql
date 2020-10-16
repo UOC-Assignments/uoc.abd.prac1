@@ -90,7 +90,7 @@ VALUES ('33333333A',
 INSERT INTO students 
 VALUES ('44444444A',
   444444,
-  fullname('Maddonna','Louise','Ciccone'),
+  fullname('Cynthia','Stephanie','Lauper'),
   currentStudiesList('GENERAL SURGERY','PEDIATRICS')
 );
 
@@ -221,49 +221,3 @@ VALUES (
 );
 
 COMMIT;
-
-
-/* ARCHIVE */
-
-/* UPDATE companies 
-SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
-  '1-January-2020', 
-  '1-January-2045',
-  'BLACK HOLE SIMULATOR PROJECT', 
-  'N',
-  (select ref(s) from PDIS s where s.NIF='22222222B'),
-  refLResearch_va(
-    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
-    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
-  ))
-WHERE businessname like 'IBM';*/
-
-/* UPDATE companies 
-SET hasColAgreements = AgreementsCol2_tab ( AgreementCol2_ob (
-  '1-January-2020', 
-  '1-January-2045',
-  'BLACK HOLE SIMULATOR PROJECT', 
-  'N',
-  (select ref(s) from PDIS s where s.NIF='22222222B'),
-  refLResearch_va(
-    (select ref(r1) from LResearches r1 where r1.name='SOFTWARE ENGINEERING'),
-    (select ref(r2) from LResearches r2 where r2.name='ASTROPHYSICS'))
-  ))
-WHERE businessname like 'IBM'; */
-
-/* UPDATE companies 
-SET hasIntAgreements = AgreementsInt_tab ( AgreementInt_ob (
-  '1-January-2020', 
-  '1-January-2045',
-  fullname('Michael','J.','Fox'),
-  null
-  ))
-WHERE businessname like 'IBM'; */
-
-/* AFEGIM MÉS FILES A LA MATEIXA RELACIÓ d'ADDENDUMS ANTERIOR */
-
-/*UPDATE TABLE(SELECT c.hasIntAgreements 
-                  FROM companies c
-                  WHERE c.businessname like 'IBM') nt   
-SET nt.hasAddendums = Addendums_tab()
-WHERE nt.startDate = '01/January/2020' AND nt.endDate = '01/January/2025';*/

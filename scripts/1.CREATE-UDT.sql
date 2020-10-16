@@ -1,7 +1,3 @@
-/*CREATE OR REPLACE TYPE Boolean AS OBJECT (
-	boolvar NUMBER(1) NOT NULL 
-);*/
-
 CREATE OR REPLACE TYPE Fullname AS OBJECT (
   name VARCHAR(30),
   surname1 VARCHAR(50),
@@ -29,7 +25,7 @@ CREATE OR REPLACE TYPE Agreement_ob AS OBJECT(
 /*startDate, endDate i goalsDescription han de ser PK (TO-DO)*/
 CREATE OR REPLACE TYPE AgreementCol_ob UNDER Agreement_ob(
   goalsDescription VARCHAR(1000),
-  extendPeriod VARCHAR(1) 
+  extendPeriod VARCHAR(1) --NOMÉS POT CONTENIR VALORS "Y" i "N" (CHECK CONSTRAINT)
 )FINAL;
 /
 
