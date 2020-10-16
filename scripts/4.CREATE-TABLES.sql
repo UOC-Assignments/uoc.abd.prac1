@@ -5,13 +5,6 @@ CREATE TABLE companies OF Company_ob (CIF PRIMARY KEY)
     (NESTED TABLE hasAddendums STORE AS hasAddendums_nt); 
 /
 
-/* CREATE TABLE agreementCols OF AgreementCol_ob (
-		CHECK (hasLinesOfResearch IS NOT NULL),
-		CHECK (hasStakeholder IS NOT NULL)
-		);
--- AQUESTS CHECKS HAN D'ANAR AL NESTED TABLE hasColAgreements_nt
-/ */
-
 CREATE TABLE PDIS OF PDI_ob (NIF PRIMARY KEY)
   /* Si ho activem passa el següent al inserir files a PDIS -> Error report -ORA-22979: cannot INSERT object view REF or user-defined REF. Provar si afegint SCOPE IS al declarar els REF soluciona el problema */
   --OBJECT IDENTIFIER IS PRIMARY KEY;

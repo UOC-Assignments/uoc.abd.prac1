@@ -25,29 +25,6 @@
  #  executed and also allows access to a summary from user space (interfacing   #
  #  via procfs).                                                                #
  #                                                                              #
- #                                                                              #
- #  IMPLEMENTATION STRATEGY:                                                    #
- #                                                                              #
- #  Exit System calls monitoring                                                #
- #                                                                              #
- #  In regards to the exit syscall codes monitoring, we only have to call the   #
- #  low-level assembler code which performs the sys_exit call associated tasks  #
- #  from within a new function (new_sys_exit) and then link it to the system    #
- #  calls vector (sys_call_table). Summing-up: this way we bypass the original  #
- #  sys_exit call (original_sys_exit) so we can modify its behaviour (in our    #
- #  case, to keep track of every exit system call executed once the kernel      #
- #  module becomes enabled via insmod traceexit.ko).                            #
- #                                                                              #
- #  Procfs Interface implementation                                             #
- #                                                                              #
- #  The goal is to implement a communication interface between the user memory  #
- #  space and the one associated with the kernel module, so an user will be     #
- #  able to read from the shell (user memory space) the data stored in the      #
- #  physical memory space reserved to the kernel (exit syscalls counters) via   #
- #  the procfs "virtual" interface -> cat /proc/traceexit. Writing operations   #
- #  will be performed from within the module (kernel memory space), so a        #
- #  writing interface from user to kernel space won't be needed.                #
- #                                                                              #
  ################################################################################
 
 
@@ -60,46 +37,18 @@
  #                                                                              #
  ##############################################################################*/
 
--- ######## DESCRIPCIÓ: 1.	En primer lloc crearem els UDT personalitzats (tipus) 
--- ########                 que siguin estrictament necessaris per a declarar els 
--- ########                 atributs de cada UDT.
+-- ######## DESCRIPCIÓ: En primer lloc crearem els UDT personalitzats (tipus) que 
+-- ######## siguin estrictament necessaris per a declarar els atributs de cada UDT.
+    
+CREATE OR REPLACE TYPE Fullname AS OBJECT (
+  name VARCHAR(30),
+  surname1 VARCHAR(50),
+  surname2 VARCHAR(50)
+)FINAL;
+/
 
--- ######## 1.1 - UDT "boolean" (NO UTILITZAT DE MOMENT)
--- ########
--- ######## DESCRIPCIÓ: A Oracle no disposem del tipus "boolean" predefinit:
--- ########             https://stackoverflow.com/questions/14731971/create-boolean-attribute-in-oracle
--- ########             Per tant, l'haurem de definir com a tipus VARCHAR(1) i 
--- ########             seguidament establir una restricció dels valors que pot 
--- ########             tenir l'atribut "boolvar" (Y/N) amb un check a la taula 
--- ########             que utilitzi el tipus de la següent manera:
--- ########             CHECK (value IN (0,1))
--- ########
--- ######## SQL:
-
-			CREATE OR REPLACE TYPE Boolean AS OBJECT (
-				boolvar NUMBER(1) NOT NULL 
-			);
-
--- ######## 1.2 - UDT "fullname"
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL:
-
-			CREATE OR REPLACE TYPE Fullname AS OBJECT (
-				name VARCHAR(30),
-				surname1 VARCHAR(50),
-				surname2 VARCHAR(50)
-			);
-
--- ######## 1.3 - UDT Collection (currentStudiesList VARRAY)
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL:
-
-			CREATE OR REPLACE TYPE CurrentStudiesList AS VARRAY(10) OF VARCHAR(30);
-
+CREATE OR REPLACE TYPE CurrentStudiesList AS VARRAY(10) OF VARCHAR(30);
+/
 
 /*###############################################################################
  #                                                                              #
@@ -112,127 +61,67 @@
 -- ######## en compte les associacions entre classes, és a dir, només es crearà 
 -- ######## l’esquelet de classes junt als seus atributs.
 
--- ######## 2.1 - CLASSE "University" 
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## TO-DO: Composition -> es pot implementar amb una taula niuada (NESTED TABLE)
--- ########
--- ######## SQL:
+CREATE OR REPLACE TYPE Company_ob AS OBJECT(
+  CIF VARCHAR(9),
+  businessName VARCHAR(100),
+  postalCode INT,
+  sector VARCHAR(100)
+)FINAL;
+/
 
-			CREATE OR REPLACE TYPE University_ob AS OBJECT(
-				name VARCHAR(100)
-			);
+CREATE OR REPLACE TYPE Agreement_ob AS OBJECT(
+  startDate date,
+  endDate date
+)NOT FINAL NOT INSTANTIABLE;
+/
 
--- ######## 2.2 - CLASSE "Company"
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL: 
+/*startDate, endDate i goalsDescription han de ser PK (TO-DO)*/
+CREATE OR REPLACE TYPE AgreementCol2_ob UNDER Agreement_ob(
+  goalsDescription VARCHAR(1000),
+  extendPeriod VARCHAR(1) --NOMÉS POT CONTENIR VALORS "Y" i "N" (CHECK CONSTRAINT)
+)FINAL;
+/
 
-			CREATE OR REPLACE TYPE Company_ob AS OBJECT(
-				CIF VARCHAR(9),
-				bussinessName VARCHAR(100),
-				postalCode INT,
-				sector VARCHAR(100)
-			);
+CREATE OR REPLACE TYPE AgreementInt_ob UNDER Agreement_ob(
+  universityManager fullname
+)FINAL;
+/
 
--- ######## 2.3 - CLASSE ABSTRACTA "Agreement" (SUPERCLASSE NO INSTANCIABLE)
--- ########
--- ######## DESCRIPCIÓ: Classe associativa. Veure com implementar a pags. 68-70 de:
--- ########             http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.84.7855&rep=rep1&type=pdf
--- ########
--- ######## SQL:
+CREATE OR REPLACE TYPE Addendum_ob AS OBJECT (
+  signatureDate date
+)FINAL;
+/
 
-			CREATE OR REPLACE TYPE Agreement_ob AS OBJECT(
-				startDate date,
-				endDate date
-			)NOT FINAL;
+CREATE OR REPLACE TYPE Student_ob AS OBJECT (
+  NIF VARCHAR(9),
+  internalID VARCHAR(9),
+  completeName fullname,
+  currentStudies currentStudiesList
+)FINAL;
+/
 
--- ######## 2.4 - SUBCLASSE DE "Agreement" -> "AgreementCol" 
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## TO-DO: Atribut "extendPeriod": Implementació cutre de boolean. Millor 
--- ########        crear un type amb check(y,n) i not null
--- ########
--- ######## SQL:
+CREATE OR REPLACE TYPE PDI_ob AS OBJECT(
+  NIF VARCHAR(9),
+  internalID VARCHAR(9),
+  completeName fullname,
+  department VARCHAR(30),
+  incorporationDate date
+)FINAL;
+/
 
-			CREATE OR REPLACE TYPE AgreementCol_ob UNDER Agreement_ob(
-				goalsDescription VARCHAR(1000),
-				extendPeriod VARCHAR(1) 
-			);
+CREATE OR REPLACE TYPE Staff_ob AS OBJECT (
+  NIF VARCHAR(9),
+  completeName fullname
+)FINAL;
+/
 
--- ######## 2.5 - SUBCLASSE DE "Agreement" -> "AgreementInt" 
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL: 
-
-			CREATE OR REPLACE TYPE AgreementInt_ob UNDER Agreement_ob(
-				universityManager fullname
-			);
-
--- ######## 2.6 - CLASSE "Addendum"
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL:
-
-			CREATE OR REPLACE TYPE Addendum_ob AS OBJECT (
-				signatureDate date
-			);
-
--- ######## 2.7 - CLASSE "Student"
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL:
-
-			CREATE OR REPLACE TYPE Student_ob AS OBJECT (
-				NIF VARCHAR(9),
-				internalID VARCHAR(9),
-				completeName fullname,
-				currentStudies currentStudiesList
-			);
-
--- ######## 2.8 - CLASSE "PDI"
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL: 
-
-			CREATE OR REPLACE TYPE PDI_ob AS OBJECT(
-				NIF VARCHAR(9),
-				internalID VARCHAR(9),
-				completeName fullname,
-				department VARCHAR(30),
-				incorporationDate date
-			);
-
--- ######## 2.9 - CLASSE "Staff"
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL:
-
-			CREATE OR REPLACE TYPE Staff_ob AS OBJECT (
-				NIF VARCHAR(9),
-				completeName fullname
-			);
-
--- ######## 2.10 - CLASSE "LResearch"
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL:
-
-			CREATE OR REPLACE TYPE LResearch_ob AS OBJECT (
-				name VARCHAR(50),
-				goalsDescription VARCHAR (1000),
-				startDate date,
-				endDate date
-			);
+CREATE OR REPLACE TYPE LResearch_ob AS OBJECT (
+  name VARCHAR(50),
+  goalsDescription VARCHAR (1000),
+  startDate date,
+  endDate date
+)FINAL;
+/
 
 /*###############################################################################
  #                                                                              #
@@ -255,56 +144,24 @@
 -- ########             associació múltiple i seguidament incloure aquest tipus a la 
 -- ########             definició d’objecte (UDT). 
 
--- ######## 3.1 - Tipus TABLE "Company_tab"
--- ########
--- ######## SQL:
 
-            CREATE or REPLACE TYPE Company_tab AS TABLE OF Company_ob;
+CREATE or REPLACE TYPE AgreementsCol2_tab AS TABLE OF AgreementCol2_ob;
+/
 
--- ######## 3.2 - Tipus TABLE "AgreementCol_tab"
--- ########
--- ######## SQL:
+CREATE or REPLACE TYPE AgreementsInt_tab AS TABLE OF AgreementInt_ob;
+/
 
-            CREATE or REPLACE TYPE Agreement_tab AS TABLE OF Agreement_ob;
+CREATE or REPLACE TYPE Addendums_tab AS TABLE OF Addendum_ob;
+/
 
--- ######## 3.3 - Tipus TABLE "AgreementCol_tab"
--- ########
--- ######## SQL:
+CREATE or REPLACE TYPE RefStudent_va AS VARRAY(5) OF REF Student_ob NOT NULL;
+/
 
-            CREATE or REPLACE TYPE AgreementCol_tab AS TABLE OF AgreementCol_ob;
+CREATE OR REPLACE TYPE RefStaff_va AS VARRAY (100) OF REF Staff_ob NOT NULL;
+/
 
--- ######## 3.4 - Tipus TABLE "Addendum_tab"
--- ########
--- ######## SQL:
-
-            CREATE or REPLACE TYPE Addendum_tab AS TABLE OF Addendum_ob;
-
--- ######## 3.5 - Tipus VARRAY "Student_va"
--- ########
--- ######## SQL:
-
-            CREATE or REPLACE TYPE Student_va AS VARRAY(5) OF Student_ob;
-
--- ######## 3.6 - Tipus TABLE "PDI_tab"
--- ########
--- ######## SQL:
-
-            CREATE or REPLACE TYPE PDI_tab AS TABLE OF PDI_ob;
-
--- ######## 3.7 - Tipus TABLE "Staff_va"  *EXPLICAR CANVI DE NT A VA
--- ########
--- ######## SQL:
-
-            --CREATE or REPLACE TYPE Staff_tab AS TABLE OF Staff_ob;
-            CREATE OR REPLACE TYPE Staff_va AS VARRAY (100) OF Staff_ob;
-
--- ######## 3.8 - Tipus VARRAY "LResearch_va"
--- ########
--- ######## SQL:
-
-            CREATE or REPLACE TYPE LResearch_va AS VARRAY(3) OF LResearch_ob;
-
-
+CREATE or REPLACE TYPE refLResearch_va AS VARRAY(3) OF REF LResearch_ob NOT NULL;
+/
 
 /*###############################################################################
  #                                                                              #
@@ -321,100 +178,37 @@
 -- ########             
 -- ########             Associacions per rang: “1..n” -> Punter (REF) a tipus VARRAY (vector)
 -- ########             
--- ########             Associacions multiple: “0..*” i “1..*” -> Punter (REF) a tipus TABLE (taula niuada)            
+-- ########             Associacions multiple: “0..*” i “1..*” ->tipus TABLE (taula niuada)            
 
--- ######## 4.1 - CLASSE "University"
--- ########
--- ######## SQL: 
 
-			ALTER TYPE University_ob ADD ATTRIBUTE(
-				hasAgreements Agreement_tab	
-				-- Potser s'ha d'implementar referenciant directament cada subclasse en comptes de la superclasse:
-				-- hasColAgreements AgreementCol_tab
-				-- hasIntAgreements AgreementsInt_tab
-			)CASCADE;
+ALTER TYPE Addendum_ob ADD ATTRIBUTE(
+  hasPDIResponsible REF PDI_ob,
+  hasStaffAssigned RefStaff_va,
+  hasEnrolledStudents RefStudent_va
+)CASCADE;
+/
 
--- ######## 4.2 - CLASSE "Company"
--- ########
--- ######## SQL: 
+ALTER TYPE PDI_ob ADD ATTRIBUTE(
+  hasSpecialty REF LResearch_ob
+)CASCADE;
+/
 
-			ALTER TYPE Company_ob ADD ATTRIBUTE(
-				refAgreement REF Agreement_ob
-				-- Potser s'ha d'implementar referenciant directament cada subclasse en comptes de la superclasse:
-				-- refAgreementsCol REF AgreementCol_ob
-				-- refIntAgreementsInt REF AgreementsInt_ob		 
-			)CASCADE;
+ALTER TYPE AgreementCol2_ob ADD ATTRIBUTE(
+  hasStakeholder REF PDI_ob,
+  hasLinesOfResearch refLResearch_va
+)CASCADE;
+/
 
--- ######## 4.3 - CLASSE ABSTRACTA "Agreement" 
--- ########
--- ######## DESCRIPCIÓ: Classe associativa. Veure com implementar a pags. 68-70 de:
--- ########             http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.84.7855&rep=rep1&type=pdf
--- ########
--- ######## SQL:
+ALTER TYPE AgreementInt_ob ADD ATTRIBUTE(
+  hasAddendums Addendums_tab
+)CASCADE;
+/
 
-			ALTER TYPE Agreement_ob ADD ATTRIBUTE(
-				refUniversity REF University_ob,
-                refCompany REF Company_ob
-			)CASCADE;
-
--- ######## 4.4 - SUBCLASSE DE "Agreement" -> "AgreementCol" 
--- ########
--- ######## SQL:
-
-			ALTER TYPE AgreementCol_ob ADD ATTRIBUTE(
-				hasStakeholder REF PDI_ob,
-                hasLinesOfResearch LResearch_va
-			)CASCADE;
-
--- ######## 4.5 - SUBCLASSE DE "Agreement" -> "AgreementInt" 
--- ########
--- ######## SQL:
-
-			ALTER TYPE AgreementInt_ob ADD ATTRIBUTE(
-                hasAddendums Addendum_tab
-			)CASCADE;
-
--- ######## 4.6 - CLASSE "Addendum"
--- ########
--- ######## SQL:
-
-			ALTER TYPE Addendum_ob ADD ATTRIBUTE(
-				hasStaffAssigned Staff_va,
-                hasEnrolledStudents Student_va,
-                hasPDIResponsible REF PDI_ob
-			)CASCADE;
-
--- ######## 4.7 - CLASSE "Student"
--- ########
--- ######## SQL: 
-
-			ALTER TYPE Student_ob ADD ATTRIBUTE(
-				--Nothing to add
-			)CASCADE;
-
--- ######## 4.8 - CLASSE "PDI"
--- ########
--- ######## SQL:
-
-			ALTER TYPE PDI_ob ADD ATTRIBUTE(
-                hasSpecialty REF LResearch_ob
-			)CASCADE;
-
--- ######## 4.9 - CLASSE "Staff"
--- ########
--- ######## SQL: 
-
-			ALTER TYPE Staff_ob ADD ATTRIBUTE(
-				--Nothing to add
-			)CASCADE;
-
--- ######## 4.10 - CLASSE "LResearch"
--- ########
--- ######## SQL:
-
-			ALTER TYPE LResearch_ob ADD ATTRIBUTE(
-				--Nothing to add
-			)CASCADE;
+ALTER TYPE Company_ob ADD ATTRIBUTE(
+    hasColAgreements AgreementsCol2_tab,
+    hasIntAgreements AgreementsInt_tab
+)CASCADE;
+/
 
 /*###############################################################################
  #                                                                              #
@@ -426,45 +220,32 @@
 -- ########             persistent del disseny Object-Relational al ORDBMS) mitjançant 
 -- ########             sentències “CREATE TABLE table OF object_type”.
 
--- ######## 3.1 TAULA "universities"
--- ########
--- ######## DESCRIPCIÓ: xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx xxxxxxxxxxx xxxxxx
--- ########
--- ######## SQL:
+CREATE TABLE companies OF Company_ob (CIF PRIMARY KEY)
+  OBJECT IDENTIFIER IS PRIMARY KEY 
+  NESTED TABLE hasColAgreements STORE AS hasColAgreements_nt
+  NESTED TABLE hasIntAgreements STORE AS hasIntAgreements_nt
+    (NESTED TABLE hasAddendums STORE AS hasAddendums_nt); 
+/
 
-            CREATE TABLE universities OF University_ob 
-            NESTED TABLE hasAgreements STORE AS hasAgreements_t;
+CREATE TABLE PDIS OF PDI_ob (NIF PRIMARY KEY)
+  /* Si ho activem passa el següent al inserir files a PDIS -> Error report -ORA-22979: cannot INSERT object view REF or user-defined REF. */
+  --OBJECT IDENTIFIER IS PRIMARY KEY;
+/
 
-            CREATE TABLE companies OF Company_ob (PRIMARY KEY (CIF));
+ALTER TABLE PDIS
+  ADD CONSTRAINT hasSpecialty CHECK (hasSpecialty IS NOT NULL);
+/
 
-			CREATE TABLE agreementCols OF AgreementCol_ob;
+CREATE TABLE students OF Student_ob (NIF PRIMARY KEY)
+  OBJECT IDENTIFIER IS PRIMARY KEY;
+/
 
-			CREATE TABLE agreementInts OF AgreementInt_ob
-            NESTED TABLE hasAddendums STORE AS hasAddendums_t; 
+CREATE TABLE staff OF Staff_ob (NIF PRIMARY KEY)
+  OBJECT IDENTIFIER IS PRIMARY KEY; 
+/
 
-            -- agreementInts no compila, possiblement per culpa de les nested tables multicapa. La solució es canviar una NT per un VARRAY gran (1000 per ex.) o unscoped:
-			-- https://www.experts-exchange.com/questions/21344386/Oracle-problem-creating-multi-layer-nested-table.html
-
-            CREATE TABLE addendums OF Addendum_ob;
-
-            CREATE TABLE pdis OF PDI_ob (PRIMARY KEY (NIF));
-
-            CREATE TABLE students OF Student_ob (PRIMARY KEY (NIF));
-
-            CREATE TABLE staff OF Staff_ob (PRIMARY KEY (NIF));
-
-            CREATE TABLE lResearch OF LResearch_ob;
-
-
--- 2nd APPROACH 
-
--- ######## 3.3 TAULA "Agreements"
--- ########
--- ######## DESCRIPCIÓ: Per la propietat de substitució (BIBLIO) podem definir una 
--- ########             única taula "Agreement" que podrà contenir files de qualsevol 
--- ########             dels seus subtipus
--- ########
--- ######## SQL:
-
-            --CREATE TABLE agreements OF Agreement_ob; --(OBJECT IDENTIFIER IS PRIMARY KEY);
+CREATE TABLE lResearches OF LResearch_ob (name PRIMARY KEY);
+  /* Si ho activem passa el següent al inserir files a PDIS -> Error report -ORA-22979: cannot INSERT object view REF or user-defined REF. */
+  --OBJECT IDENTIFIER IS PRIMARY KEY; 
+/
 
