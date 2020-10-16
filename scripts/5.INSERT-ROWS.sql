@@ -220,4 +220,22 @@ VALUES (
   ) 
 );
 
+INSERT INTO TABLE( SELECT nt1.hasAddendums 
+  FROM TABLE( SELECT c.hasIntAgreements 
+    FROM companies c
+    WHERE c.businessName like 'IBM') nt1
+  WHERE nt1.startDate = '01/January/2015' AND nt1.endDate = '01/January/2020')
+VALUES (
+  '01/January/2015',
+  (select ref(r1) from PDIS r1 where r1.NIF='22222222B'),
+  RefStaff_va(
+    (select ref(r1) from staff r1 where r1.NIF='33333333C'),
+    (select ref(r2) from staff r2 where r2.NIF='44444444C')
+  ), 
+  RefStudent_va(
+    (select ref(r1) from students r1 where r1.NIF='33333333A'),
+    (select ref(r2) from students r2 where r2.NIF='44444444A')
+  ) 
+);
+
 COMMIT;
