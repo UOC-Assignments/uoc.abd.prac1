@@ -12,7 +12,7 @@
  #                        STUDENT: Jordi Bericat Ruz                            #
  #                           TERM: Autumn 2020/21                               #
  #                    GITHUB REPO: UOC-Assignments/uoc.abd.prac1"               #
- #                    FILE 1 OF 4: database.sql                                 #
+ #                    FILE 1 OF 4: 1_OR-database.sql                            #
  #                        VERSION: 1.0                                          #
  #                                                                              #
  ################################################################################
@@ -176,7 +176,6 @@ CREATE or REPLACE TYPE refLResearch_va AS VARRAY(3) OF REF LResearch_ob NOT NULL
 -- ########             
 -- ########             Associacions multiple: “0..*” i “1..*” ->tipus TABLE (taula niuada)            
 
-
 ALTER TYPE Addendum_ob ADD ATTRIBUTE(
   hasPDIResponsible REF PDI_ob,
   hasStaffAssigned RefStaff_va,
@@ -244,4 +243,3 @@ CREATE TABLE lResearches OF LResearch_ob (name PRIMARY KEY);
   /* Si ho activem passa el següent al inserir files a PDIS -> Error report -ORA-22979: cannot INSERT object view REF or user-defined REF. */
   --OBJECT IDENTIFIER IS PRIMARY KEY; 
 /
-

@@ -12,7 +12,7 @@
  #                        STUDENT: Jordi Bericat Ruz                            #
  #                           TERM: Autumn 2020/21                               #
  #                    GITHUB REPO: UOC-Assignments/uoc.abd.prac1"               #
- #                    FILE 3 OF 4: delete-rows.sql                              #
+ #                    FILE 3 OF 4: 3_delete-rows.sql                            #
  #                        VERSION: 1.0                                          #
  #                                                                              #
  ################################################################################

@@ -12,7 +12,7 @@
  #                        STUDENT: Jordi Bericat Ruz                            #
  #                           TERM: Autumn 2020/21                               #
  #                    GITHUB REPO: UOC-Assignments/uoc.abd.prac1"               #
- #                    FILE 2 OF 4: insert-rows.sql                              #
+ #                    FILE 2 OF 4: 2_insert-rows.sql                            #
  #                        VERSION: 1.0                                          #
  #                                                                              #
  ################################################################################
