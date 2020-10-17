@@ -1,5 +1,0 @@
-@'..\1_database.sql'
-@'..\2_inserts.sql'
-@'..\3_delete-rows.sql'
-@'..\4_selects.sql'
-@'8.DROP-DATABASE.sql'
