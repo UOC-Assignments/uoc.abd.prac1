@@ -11,19 +11,15 @@
  #                                                                              #
  #                        STUDENT: Jordi Bericat Ruz                            #
  #                           TERM: Autumn 2020/21                               #
- #                       GIT REPO: UOC-Assignments/uoc.abd.prac1"               #
- #                    FILE 1 OF 3: database.sql                                 #
+ #                    GITHUB REPO: UOC-Assignments/uoc.abd.prac1"               #
+ #                    FILE 1 OF 4: database.sql                                 #
  #                        VERSION: 1.0                                          #
  #                                                                              #
  ################################################################################
 
  ################################################################################
  #                                                                              #
- #  DESCRIPTION:                                                                #
- #                                                                              #
- #  Implement a Linux Kernel module that keeps track of every exit system call  #
- #  executed and also allows access to a summary from user space (interfacing   #
- #  via procfs).                                                                #
+ #  DESCRIPTION: Oracle SQL Script that creates an object-oriented database     #
  #                                                                              #
  ################################################################################
 
@@ -33,7 +29,7 @@
 
 /*###############################################################################
  #                                                                              #
- #                   1. DEFINIM ELS TIPUS DE DADES PERSONALITZATS               #
+ #                  1. DEFINIM ELS TIPUS DE DADES PERSONALITZATS                #
  #                                                                              #
  ##############################################################################*/
 
