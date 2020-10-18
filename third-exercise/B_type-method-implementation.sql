@@ -69,15 +69,16 @@ END;
 
 CREATE OR REPLACE TYPE BODY projstudent AS 
   MAP MEMBER FUNCTION get_top_project RETURN VARCHAR IS    
-    i INT := 5;
+    --i INT := 0;
   BEGIN
     <<bucle>>
-    FOR i IN 5..1 LOOP
+    FOR i IN REVERSE 1..5 
+    LOOP
       IF ( projectPref(i) IS NOT NULL ) THEN
         RETURN projectPref(i);
       END IF;
-    END loop bucle;
-    RETURN NULL;
+    END LOOP bucle;
+    RETURN 'NO RECORDS FOUND';
   END get_top_project;
 END;
 /
