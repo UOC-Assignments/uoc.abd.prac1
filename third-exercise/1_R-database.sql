@@ -123,15 +123,27 @@ INSERT INTO professors VALUES (
 );
 
 INSERT INTO professors VALUES (
- 222222,
+ 22222,
  'Enric',
  'Morancho Llena',
  '05577'
 );
 
 INSERT INTO finalProjects VALUES (
- 'Disseny duna base de dades orientada a objectes i dun TAD en java que realitza operacions sobre la BD',
+ 'Disseny de TAD java que realitza operacions sobre una ORBD',
  11111,
+ 'Tardor 2020/21'
+);
+
+INSERT INTO finalProjects VALUES (
+ 'CoVID19 Open ORBD Project',
+ 11111,
+ 'Tardor 2020/21'
+);
+
+INSERT INTO finalProjects VALUES (
+ 'Linux kernel driver implementation',
+ 22222,
  'Tardor 2020/21'
 );
 
@@ -148,12 +160,12 @@ INSERT INTO finalProjects VALUES (
 CREATE OR REPLACE VIEW
 FinalProjects_view OF FinalProjects_t WITH OBJECT OID(stCode) AS
   SELECT 
-          s.stCode AS STUDIES_CODE,
-          s.stName AS STUDIES_NAME,
-          p.pfName AS PROFESSOR_NAME,
-          p.pfSurname AS PROFESSOR_SURNAME,
-          f.title AS PROJECT_TITLE,
-          f.course AS PROJECT_COURSE
+          s.stCode,
+          s.stName,
+          p.pfName,
+          p.pfSurname,
+          f.title,
+          f.course
   FROM    studies s, professors p, finalProjects f 
   WHERE   f.uniCode = p.uniCode AND p.stCode = s.stCode
 ;
