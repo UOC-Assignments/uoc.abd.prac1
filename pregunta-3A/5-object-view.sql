@@ -12,7 +12,7 @@
  #                        STUDENT: Jordi Bericat Ruz                            #
  #                           TERM: Autumn 2020/21                               #
  #                    GITHUB REPO: UOC-Assignments/uoc.abd.prac1"               #
- #                    FILE 1 OF 4: 1_OR-database.sql                            #
+ #                    FILE 5 OF 6: 5-object-view.sql                            #
  #                        VERSION: 1.0                                          #
  #                                                                              #
  ################################################################################
