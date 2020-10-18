@@ -146,9 +146,15 @@ INSERT INTO professors VALUES (
  '05577'
 );
 
+INSERT INTO finalProjects VALUES (
+ 'Disseny duna base de dades orientada a objectes i dun TAD en java que realitza operacions sobre la BD',
+ 11111,
+ 'Tardor 2020/21'
+);
+
 /*###############################################################################
  #                                                                              #
- #                                  Z. OBJECT VIEW                              #
+ #                               Z. CREATE OBJECT VIEW                          #
  #                                                                              #
  ##############################################################################*/
 
@@ -168,7 +174,13 @@ FinalProjects_view OF FinalProjects_t WITH OBJECT OID(stCode) AS
 ;
 /
 
--- ERROR: 
 
+/*###############################################################################
+ #                                                                              #
+ #                                 Z. RUN OBJECT VIEW                           #
+ #                                                                              #
+ ##############################################################################*/
 
+-- ######## DESCRIPCIÓ: 
 
+SELECT * FROM FinalProjects_view;
