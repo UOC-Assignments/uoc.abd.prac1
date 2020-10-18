@@ -35,30 +35,50 @@
  ##############################################################################*/
 
 CREATE TYPE vfinalPro AS VARRAY(5) OF VARCHAR(150);
- 
+/
+
 CREATE OR REPLACE TYPE projstudent AS OBJECT(
   unicode INTEGER, 
   stName VARCHAR(200), 
   stSurname VARCHAR(200), 
   projectPref vfinalPro,
-  MEMBER PROCEDURE display_top_project (SELF IN OUT NOCOPY projstudent),
+  --MEMBER PROCEDURE display_top_project (SELF IN OUT NOCOPY projstudent),
   MAP MEMBER FUNCTION get_top_project RETURN VARCHAR
 );
+/
 
 CREATE TABLE tbStudent OF projstudent (unicode PRIMARY KEY);
-
+/
 ------------------------------------------------------------------------------------
+
+/* V1 */
+
+/*
 
 CREATE OR REPLACE TYPE BODY projstudent AS 
   MAP MEMBER FUNCTION get_top_project RETURN VARCHAR IS 
    BEGIN
      RETURN projectPref(5); --DE MOMENT SUPOSEM QUE SEMPRE HI HAURÀ 5 PROPOSTES DE TREBALL FINAL. SI EM DONA TEMPS IMPLEMENTARÉ UN LOOP QUE VAGI COMPROVANT, DES DE LA DARRERA FINS LA PRIMERA POSICIÓ DEL VARRAY, SI AQUEST CONTÉ UN VALOR NUL. SI = NUL; INDEX--; SINO RETURN PROJECTPREF[INDEX]. SEMPRE SUPOSAREM QUE AL MENYS HI HA UNA PROPOSTA DE TREBALL 
    END;
-   /* EL SEGÜENT PROCEDIMENT S'ENGARREGA DE GENERAR LA VISTA*/
-   MEMBER PROCEDURE display_top_project (SELF IN OUT NOCOPY projstudent) IS 
-   BEGIN
-    DBMS_OUTPUT.PUT_LINE(stname || ' ' || stsurname || ' ' || get_top_project());
-   END;
+END;
+/
+
+*/
+
+/* V2 */
+
+CREATE OR REPLACE TYPE BODY projstudent AS 
+  MAP MEMBER FUNCTION get_top_project RETURN VARCHAR IS    
+    i INT := 5;
+  BEGIN
+    <<bucle>>
+    FOR i IN 5..1 LOOP
+      IF ( projectPref(i) IS NOT NULL ) THEN
+        RETURN projectPref(i);
+      END IF;
+    END loop bucle;
+    RETURN NULL;
+  END get_top_project;
 END;
 /
 
@@ -82,6 +102,7 @@ INSERT INTO tbstudent VALUES (
 ------------------------------------------------------------------------------------
 
 
+SELECT ts.get_top_project() from tbStudent ts;
 
 
 
