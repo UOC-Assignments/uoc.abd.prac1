@@ -40,17 +40,65 @@ CREATE OR REPLACE TYPE projstudent AS OBJECT(
   unicode INTEGER, 
   stName VARCHAR(200), 
   stSurname VARCHAR(200), 
-  projectPref vfinalPro
+  projectPref vfinalPro,
+  MEMBER PROCEDURE display_top_project (SELF IN OUT NOCOPY projstudent),
+  MAP MEMBER FUNCTION get_top_project RETURN VARCHAR
 );
 
 CREATE TABLE tbStudent OF projstudent (unicode PRIMARY KEY);
 
+------------------------------------------------------------------------------------
+
 CREATE OR REPLACE TYPE BODY projstudent AS 
   MAP MEMBER FUNCTION get_top_project RETURN VARCHAR IS 
    BEGIN
-    RETURN projectPref[5]; --DE MOMENT SUPOSEM QUE SEMPRE HI HAURÀ 5 PROPOSTES DE TREBALL FINAL. SI EM DONA TEMPS IMPLEMENTARÉ UN LOOP QUE VAGI COMPROVANT, DES DE LA DARRERA FINS LA PRIMERA POSICIÓ DEL VARRAY, SI AQUEST CONTÉ UN VALOR NUL. SI = NUL; INDEX--; SINO RETURN PROJECTPREF[INDEX]. SEMPRE SUPOSAREM QUE AL MENYS HI HA UNA PROPOSTA DE TREBALL 
-  END;
-  MEMBER PROCEDURE generate_fullname (SELF IN OUT NOCOPY fullname) IS BEGIN
-   DBMS_OUTPUT.PUT_LINE(given || ' ' || initials || ' ' || surname);
-  END;
+     RETURN projectPref(5); --DE MOMENT SUPOSEM QUE SEMPRE HI HAURÀ 5 PROPOSTES DE TREBALL FINAL. SI EM DONA TEMPS IMPLEMENTARÉ UN LOOP QUE VAGI COMPROVANT, DES DE LA DARRERA FINS LA PRIMERA POSICIÓ DEL VARRAY, SI AQUEST CONTÉ UN VALOR NUL. SI = NUL; INDEX--; SINO RETURN PROJECTPREF[INDEX]. SEMPRE SUPOSAREM QUE AL MENYS HI HA UNA PROPOSTA DE TREBALL 
+   END;
+   /* EL SEGÜENT PROCEDIMENT S'ENGARREGA DE GENERAR LA VISTA*/
+   MEMBER PROCEDURE display_top_project (SELF IN OUT NOCOPY projstudent) IS 
+   BEGIN
+    DBMS_OUTPUT.PUT_LINE(stname || ' ' || stsurname || ' ' || get_top_project());
+   END;
 END;
+/
+
+------------------------------------------------------------------------------------
+
+
+INSERT INTO tbstudent VALUES (
+ 111111,
+ 'Freddie',
+ 'Mercury',
+ vfinalPro('treb_pr5','treb_pr4','treb_pr3','treb_pr2','treb_pr1')
+);
+ 
+INSERT INTO tbstudent VALUES (
+ 222222,
+ 'Jimmy',
+ 'Hendrix',
+ vfinalPro('treb_pr3','treb_pr2','treb_pr1','','')
+);
+
+------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
