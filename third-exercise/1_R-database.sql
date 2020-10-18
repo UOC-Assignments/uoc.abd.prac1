@@ -19,7 +19,8 @@
 
  ################################################################################
  #                                                                              #
- #  DESCRIPTION: Oracle SQL Script that creates an object-oriented database     #
+ #  DESCRIPTION: Oracle SQL Script that creates an object-view from attributes  # 
+ #  contained in relational tables                                              #
  #                                                                              #
  ################################################################################
 
@@ -29,11 +30,9 @@
 
 /*###############################################################################
  #                                                                              #
- #                      1. DATABASE PROPORCIONADA A L'ENUNCIAT                  #
+ #                            1. RELATIONAL DB PROVIDED                         #
  #                                                                              #
  ##############################################################################*/
-
--- ######## DESCRIPCIÓ: 
 
 CREATE TABLE studies ( 
   stCode VARCHAR(5) NOT NULL, 
@@ -100,27 +99,11 @@ CREATE OR REPLACE TYPE FinalProjects_t AS OBJECT (
 );
 /
 
-/*CREATE OR REPLACE TYPE Professor_t AS OBJECT (
-  pfName VARCHAR(200), 
-  pfSurname VARCHAR(200)
-);
-/
-
-CREATE OR REPLACE TYPE FinalProjects_t AS OBJECT (
-  title VARCHAR(150), 
-  course VARCHAR(15)
-);*/
-/
-
-
 /*###############################################################################
  #                                                                              #
- #                                Z. INSERTS DE PROVA                           #
+ #                                 4. TRIVIAL INSERTS                           #
  #                                                                              #
  ##############################################################################*/
-
--- ######## DESCRIPCIÓ: 
-
 
 INSERT INTO studies VALUES (
  '05607',
@@ -154,11 +137,13 @@ INSERT INTO finalProjects VALUES (
 
 /*###############################################################################
  #                                                                              #
- #                               Z. CREATE OBJECT VIEW                          #
+ #                               5. CREATE OBJECT VIEW                          #
  #                                                                              #
  ##############################################################################*/
 
--- ######## DESCRIPCIÓ: 
+-- ######## DESCRIPCIÓ: La query realitzada durant la invocació de la vista permet
+-- ######## mapar els atributs originals continguts a la BD relacional en els 
+-- ######## atributs del tipus objecte "FinalProjects_t"
 
 CREATE OR REPLACE VIEW
 FinalProjects_view OF FinalProjects_t WITH OBJECT OID(stCode) AS
@@ -177,10 +162,10 @@ FinalProjects_view OF FinalProjects_t WITH OBJECT OID(stCode) AS
 
 /*###############################################################################
  #                                                                              #
- #                                 Z. RUN OBJECT VIEW                           #
+ #                                 6. RUN OBJECT VIEW                           #
  #                                                                              #
  ##############################################################################*/
 
--- ######## DESCRIPCIÓ: 
+-- ######## DESCRIPCIÓ: Fent un SELECT podem invocar la object-view
 
 SELECT * FROM FinalProjects_view;
