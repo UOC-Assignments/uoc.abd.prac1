@@ -103,8 +103,26 @@ INSERT INTO tbstudent VALUES (
 ------------------------------------------------------------------------------------
 
 
-SELECT ts.get_top_project() from tbStudent ts;
 
+--SELECT ts.get_top_project() from tbStudent ts;
+
+------------------------------------------------------------------------------------
+
+CREATE OR REPLACE TYPE projstudent_vt AS OBJECT (
+  uniCode INTEGER,
+  stName VARCHAR(200),
+  topProject VARCHAR(150)
+);
+/
+
+CREATE OR REPLACE VIEW
+TopProjects_view OF projstudent_vt WITH OBJECT OID(uniCode) AS
+  SELECT s.uniCode, s.stName, s.get_top_project()
+  FROM tbstudent s
+;
+/
+
+SELECT * FROM topProjects_view;
 
 
 
