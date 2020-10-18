@@ -159,15 +159,9 @@ INSERT INTO finalProjects VALUES (
 
 CREATE OR REPLACE VIEW
 FinalProjects_view OF FinalProjects_t WITH OBJECT OID(stCode) AS
-  SELECT 
-          s.stCode,
-          s.stName,
-          p.pfName,
-          p.pfSurname,
-          f.title,
-          f.course
-  FROM    studies s, professors p, finalProjects f 
-  WHERE   f.uniCode = p.uniCode AND p.stCode = s.stCode
+  SELECT s.stCode, s.stName, p.pfName, p.pfSurname, f.title, f.course
+  FROM studies s, professors p, finalProjects f 
+  WHERE f.uniCode = p.uniCode AND p.stCode = s.stCode
 ;
 /
 
